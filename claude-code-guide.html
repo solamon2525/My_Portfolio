@@ -1,0 +1,2192 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code Mastery Guide</title>
+<style>
+
+:root{--primary:#6c47ff;--secondary:#0ea5e9;--bg:#0f0f1a;--bg-card:#1a1a2e;--bg-card2:#16213e;--text:#e2e8f0;--text-muted:#94a3b8;--text-dim:#64748b;--border:#2d2d4e;--code-bg:#0d1117;--sidebar-w:280px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;font-size:15px;line-height:1.7}
+.sidebar{width:var(--sidebar-w);background:var(--bg-card);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;overflow-y:auto;z-index:100;display:flex;flex-direction:column}
+.sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid var(--border)}
+.sidebar-logo h1{font-size:16px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.3}
+.sidebar-logo .sub{font-size:11px;color:var(--text-dim);margin-top:4px}
+.nav-section{padding:8px 0}
+.nav-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);padding:6px 20px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 20px;color:var(--text-muted);text-decoration:none;font-size:13.5px;border-left:3px solid transparent;transition:all .15s;cursor:pointer}
+.nav-item:hover{color:var(--text);background:rgba(108,71,255,.08)}
+.nav-item.active{color:var(--primary);border-left-color:var(--primary);background:rgba(108,71,255,.08);font-weight:600}
+.nav-item .icon{font-size:16px;width:20px;text-align:center;flex-shrink:0}
+.nav-sub{padding:4px 20px 4px 50px;color:var(--text-dim);font-size:12.5px;display:block;cursor:pointer}
+.nav-sub:hover{color:var(--text-muted)}
+.sidebar-footer{margin-top:auto;padding:16px 20px;border-top:1px solid var(--border);font-size:11px;color:var(--text-dim)}
+.main{margin-left:var(--sidebar-w);flex:1;min-height:100vh}
+.content-section{display:none;padding:40px 48px;max-width:900px;animation:fadeIn .2s ease}
+.content-section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.hero{background:linear-gradient(135deg,rgba(108,71,255,.15),rgba(14,165,233,.1));border:1px solid rgba(108,71,255,.3);border-radius:16px;padding:32px 36px;margin-bottom:32px}
+.hero h2{font-size:28px;font-weight:800;background:linear-gradient(135deg,#a78bfa,#38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px}
+.hero p{color:var(--text-muted);font-size:15px;max-width:600px}
+.section-title{font-size:22px;font-weight:700;color:var(--text);margin:32px 0 16px;display:flex;align-items:center;gap:10px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.sub-title{font-size:17px;font-weight:600;color:#c4b5fd;margin:24px 0 12px}
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}
+.card-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;transition:border-color .15s,transform .15s}
+.card:hover{border-color:var(--primary);transform:translateY(-1px)}
+.card .card-icon{font-size:24px;margin-bottom:10px}
+.card h4{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px}
+.card p{font-size:12.5px;color:var(--text-muted);line-height:1.6}
+.badge{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:2px 8px;border-radius:20px}
+.badge-green{background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.3)}
+.badge-yellow{background:rgba(234,179,8,.15);color:#fbbf24;border:1px solid rgba(234,179,8,.3)}
+.badge-purple{background:rgba(108,71,255,.15);color:#a78bfa;border:1px solid rgba(108,71,255,.3)}
+.badge-blue{background:rgba(14,165,233,.15);color:#38bdf8;border:1px solid rgba(14,165,233,.3)}
+.badge-red{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3)}
+.code-block{background:var(--code-bg);border:1px solid #30363d;border-radius:10px;padding:18px 20px;font-family:'Cascadia Code','Fira Code',Consolas,monospace;font-size:13px;line-height:1.7;overflow-x:auto;margin:12px 0;position:relative}
+.code-block .label{position:absolute;top:8px;right:12px;font-size:10px;color:var(--text-dim);font-family:sans-serif;text-transform:uppercase}
+.c-comment{color:#6e7681}.c-cmd{color:#79c0ff}.c-str{color:#a5d6ff}.c-key{color:#ff7b72}.c-val{color:#ffa657}.c-ok{color:#56d364}
+.tip,.warn,.info,.pro{border-radius:10px;padding:14px 18px;margin:14px 0;font-size:13.5px;display:flex;gap:12px;align-items:flex-start}
+.tip{background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.25)}
+.warn{background:rgba(234,179,8,.08);border:1px solid rgba(234,179,8,.25)}
+.info{background:rgba(14,165,233,.08);border:1px solid rgba(14,165,233,.25)}
+.pro{background:rgba(108,71,255,.08);border:1px solid rgba(108,71,255,.25)}
+.tip .icon{color:#22c55e;font-size:18px;flex-shrink:0}.warn .icon{color:#eab308;font-size:18px;flex-shrink:0}.info .icon{color:#0ea5e9;font-size:18px;flex-shrink:0}.pro .icon{color:#7c3aed;font-size:18px;flex-shrink:0}
+.tip strong,.warn strong,.info strong,.pro strong{display:block;margin-bottom:3px}
+.cmd-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+.cmd-table th{background:var(--bg-card2);color:var(--text-dim);font-size:11px;text-transform:uppercase;letter-spacing:.5px;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+.cmd-table td{padding:10px 14px;border-bottom:1px solid rgba(45,45,78,.5);vertical-align:top}
+.cmd-table tr:last-child td{border-bottom:none}
+.cmd-table tr:hover td{background:rgba(108,71,255,.04)}
+.cmd-table .cmd{font-family:monospace;font-size:13px;color:#79c0ff;white-space:nowrap}
+.cmd-table .desc{color:var(--text-muted)}
+.skill-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px;display:flex;gap:16px;margin-bottom:12px;transition:border-color .15s}
+.skill-card:hover{border-color:var(--primary)}
+.skill-icon{font-size:32px;flex-shrink:0;width:48px;text-align:center}
+.skill-body h4{font-size:15px;font-weight:700;margin-bottom:4px}
+.skill-body .trigger{font-family:monospace;font-size:12px;color:#79c0ff;background:rgba(121,192,255,.1);padding:2px 8px;border-radius:4px;display:inline-block;margin:6px 0}
+.skill-body p{font-size:13px;color:var(--text-muted);line-height:1.6}
+.connector-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:10px}
+.connector-card .top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.connector-card .top h4{font-size:15px;font-weight:700}
+.connector-card .top .logo{font-size:24px}
+.connector-card p{font-size:13px;color:var(--text-muted);margin-bottom:10px}
+.usecase-card{background:linear-gradient(135deg,var(--bg-card),var(--bg-card2));border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:16px}
+.usecase-card .tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--primary);margin-bottom:10px}
+.usecase-card h4{font-size:17px;font-weight:700;margin-bottom:8px}
+.usecase-card .scenario{background:var(--code-bg);border-radius:8px;padding:12px 16px;font-size:13px;color:var(--text-muted);margin:12px 0;border-left:3px solid var(--primary);font-style:italic}
+.usecase-card ul{padding-left:20px;color:var(--text-muted);font-size:13.5px}
+.usecase-card ul li{margin-bottom:5px}
+.flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:16px 0}
+.flow-step{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:13px;font-weight:600}
+.flow-arrow{color:var(--text-dim);font-size:18px}
+.stats{display:flex;gap:14px;margin:20px 0;flex-wrap:wrap}
+.stat-box{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:16px 20px;flex:1;min-width:120px;text-align:center}
+.stat-box .num{font-size:28px;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-box .label{font-size:12px;color:var(--text-dim);margin-top:4px}
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.mode-card{background:var(--bg-card);border-radius:12px;padding:18px;border:1px solid var(--border)}
+.mode-card .mode-name{font-size:14px;font-weight:700;margin-bottom:6px}
+.mode-card p{font-size:12.5px;color:var(--text-muted)}
+.mode-card .shortcut{font-family:monospace;font-size:11px;background:rgba(255,255,255,.08);padding:2px 6px;border-radius:4px;margin-top:8px;display:inline-block;color:var(--text-dim)}
+.nav-arrows{display:flex;gap:10px;margin-top:40px;padding-top:24px;border-top:1px solid var(--border)}
+.nav-btn{padding:10px 20px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;color:var(--text-muted);cursor:pointer;font-size:13px;transition:all .15s}
+.nav-btn:hover{border-color:var(--primary);color:var(--text)}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+p{color:var(--text-muted);margin-bottom:10px}
+code{font-family:monospace;background:rgba(255,255,255,.08);padding:1px 6px;border-radius:4px;font-size:13px;color:#79c0ff}
+
+
+/* ── COPY BUTTON ── */
+.copy-btn{position:absolute;top:8px;right:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--text-dim);font-size:11px;font-family:sans-serif;padding:2px 10px;border-radius:5px;cursor:pointer;transition:all .15s;z-index:10;white-space:nowrap}
+.copy-btn:hover{background:rgba(108,71,255,.2);border-color:var(--primary);color:var(--text)}
+.copy-btn.copied{color:#4ade80;border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.08)}
+
+/* ── SEARCH ── */
+.search-wrap{padding:12px 16px;border-bottom:1px solid var(--border)}
+.search-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:7px 12px 7px 32px;color:var(--text);font-size:13px;outline:none;transition:border-color .15s}
+.search-input:focus{border-color:var(--primary)}
+.search-wrap-inner{position:relative}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-dim);font-size:13px;pointer-events:none}
+.search-empty{padding:12px 20px;font-size:12px;color:var(--text-dim);display:none}
+.nav-item.hidden,.nav-sub.hidden{display:none!important}
+mark{background:rgba(108,71,255,.25);color:var(--text);border-radius:2px;padding:0 1px}
+
+/* ── QUICK REF specific ── */
+.qr-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+.qr-box{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+.qr-box h4{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:10px}
+.qr-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(45,45,78,.5);font-size:13px}
+.qr-row:last-child{border-bottom:none}
+.qr-key{font-family:monospace;color:#79c0ff;font-size:12.5px}
+.qr-val{color:var(--text-muted);font-size:12px;text-align:right;max-width:55%}
+.print-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;margin-top:20px;transition:opacity .15s}
+.print-btn:hover{opacity:.85}
+
+/* ── PRINT ── */
+@media print{
+  .sidebar,.nav-arrows,.print-btn{display:none!important}
+  .main{margin-left:0}
+  .content-section{display:none!important;padding:20px}
+  .content-section.print-target{display:block!important}
+  body{background:#fff;color:#000;font-size:12px}
+  .qr-box{border:1px solid #ccc}
+  .qr-key{color:#1a1a9e}
+  .hero h2{-webkit-text-fill-color:#000;background:none;color:#000}
+}
+
+
+    /* ── Prompt Engineering: compare boxes ── */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    @media (max-width: 700px) {
+      .compare-grid { grid-template-columns: 1fr; }
+    }
+    .compare-box { border-radius: 10px; padding: 1rem; }
+    .bad-box { background: rgba(239,68,68,.08); border: 1px solid rgba(239,68,68,.25); }
+    .good-box { background: rgba(34,197,94,.08); border: 1px solid rgba(34,197,94,.25); }
+    .compare-label { font-weight: 700; margin-bottom: 0.5rem; font-size: 0.85rem; }
+    .bad-box .compare-label { color: #f87171; }
+    .good-box .compare-label { color: #4ade80; }
+    .compare-box .code-block { margin: 0; font-size: 0.8rem; }
+
+    /* ref-table */
+    .ref-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    .ref-table th { background: var(--card); padding: 0.65rem 1rem;
+      text-align: left; border-bottom: 2px solid var(--border); color: var(--primary); }
+    .ref-table td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); }
+    .ref-table tr:last-child td { border-bottom: none; }
+    .ref-table tr:hover td { background: var(--card-hover,rgba(255,255,255,.03)); }
+
+  
+    /* ── Prompt Engineering: compare boxes ── */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    @media (max-width: 700px) {
+      .compare-grid { grid-template-columns: 1fr; }
+    }
+    .compare-box { border-radius: 10px; padding: 1rem; }
+    .bad-box { background: rgba(239,68,68,.08); border: 1px solid rgba(239,68,68,.25); }
+    .good-box { background: rgba(34,197,94,.08); border: 1px solid rgba(34,197,94,.25); }
+    .compare-label { font-weight: 700; margin-bottom: 0.5rem; font-size: 0.85rem; }
+    .bad-box .compare-label { color: #f87171; }
+    .good-box .compare-label { color: #4ade80; }
+    .compare-box .code-block { margin: 0; font-size: 0.8rem; }
+
+    /* ref-table */
+    .ref-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    .ref-table th { background: var(--card); padding: 0.65rem 1rem;
+      text-align: left; border-bottom: 2px solid var(--border); color: var(--primary); }
+    .ref-table td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); }
+    .ref-table tr:last-child td { border-bottom: none; }
+    .ref-table tr:hover td { background: var(--card-hover,rgba(255,255,255,.03)); }
+
+  </style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <h1>Claude Code<br>Mastery Guide</h1>
+    <div class="sub">คู่มือฉบับสมบูรณ์ · 2026</div>
+  </div>
+
+  <div class="search-wrap">
+    <div class="search-wrap-inner">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="sideSearch" type="text" placeholder="ค้นหาหัวข้อ..." autocomplete="off">
+    </div>
+    <div class="search-empty" id="searchEmpty">ไม่พบ "<span id="searchTerm"></span>"</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">เนื้อหา</div>
+    <a class="nav-item active" onclick="show('s1')"><span class="icon">🚀</span>1. เริ่มต้น (Fundamentals)</a>
+    <a class="nav-sub" onclick="show('s1')">Claude Code คืออะไร</a>
+    <a class="nav-sub" onclick="show('s1')">Permission Modes</a>
+    <a class="nav-item" onclick="show('s2')"><span class="icon">⚡</span>2. เพิ่มประสิทธิภาพ</a>
+    <a class="nav-sub" onclick="show('s2')">CLAUDE.md + .claudeignore</a>
+    <a class="nav-sub" onclick="show('s2')">Slash Commands + Hooks</a>
+    <a class="nav-item" onclick="show('s3')"><span class="icon">💰</span>3. ลดการใช้ Token</a>
+    <a class="nav-sub" onclick="show('s3'">/compact &amp; /clear</a>
+    <a class="nav-sub" onclick="show('s3')">Specific Prompting</a>
+    <a class="nav-item" onclick="show('s4')"><span class="icon">🎯</span>4. Skills / Extensions</a>
+    <a class="nav-sub" onclick="show('s4')">Built-in Skills ทั้งหมด</a>
+    <a class="nav-sub" onclick="show('s4')">Custom Skills</a>
+    <a class="nav-item" onclick="show('s5')"><span class="icon">🔌</span>5. Connectors / MCP</a>
+    <a class="nav-sub" onclick="show('s5')">MCP คืออะไร</a>
+    <a class="nav-sub" onclick="show('s5')">Connectors ยอดนิยม</a>
+    <a class="nav-item" onclick="show('s6')"><span class="icon">🤖</span>6. Agents &amp; Subagents</a>
+    <a class="nav-sub" onclick="show('s6')">Agent Types + Worktree</a>
+    <a class="nav-sub" onclick="show('s6')">Custom Subagent</a>
+    <a class="nav-item" onclick="show('s7')"><span class="icon">💡</span>7. Use Cases &amp; ตัวอย่าง</a>
+    <a class="nav-sub" onclick="show('s7')">Dev / Docs / Data</a>
+    <a class="nav-sub" onclick="show('s7')">Review / Browser / Legacy</a>
+  </div>
+    <a class="nav-item" onclick="show('s8')"><span class="icon">⚡</span>Quick Reference Card</a>
+    <a class="nav-sub" onclick="show('s8')">Commands + Shortcuts</a>
+    <a class="nav-sub" onclick="show('s8')">พร้อม Print</a>
+      <div class="nav-item" onclick="show('s9')" id="nav-s9">
+        <span class="nav-icon">&#129329;</span>
+        <span>Prompt Engineering</span>
+      </div>
+      <div class="nav-sub" id="sub-s9">
+        <div onclick="show('s9')">Role Assignment</div>
+        <div onclick="show('s9')">Chain of Thought</div>
+        <div onclick="show('s9')">Few-shot Prompting</div>
+        <div onclick="show('s9')">Constraint Prompting</div>
+        <div onclick="show('s9')">Iterative Prompting</div>
+        <div onclick="show('s9')">Context Loading</div>
+      </div>
+    <div class="sidebar-footer">Claude Code · Anthropic 2026<br><span style="color:#4ade80">●</span> claude-sonnet-4-6 &nbsp;|&nbsp; ← → เลื่อนหน้า</div>
+</nav>
+
+<main class="main">
+
+<section id="s1" class="content-section active">
+  <div class="hero">
+    <h2>🚀 เริ่มต้นกับ Claude Code</h2>
+    <p>Claude Code คือ AI coding assistant แบบ terminal-native — ไม่ใช่แค่ autocomplete แต่ทำงานครบวงจรเป็นผู้ช่วยนักพัฒนาอย่างแท้จริง</p>
+  </div>
+  <div class="section-title">🧠 Claude Code คืออะไร</div>
+  <p>Claude Code ทำงานในรูปแบบ <strong>Conversational REPL</strong> — คุณคุยกับ AI ที่เข้าใจ codebase ทั้งหมด สั่งรัน command ได้ จัดการ file ได้ และ spawn subagent ได้</p>
+  <div class="stats">
+    <div class="stat-box"><div class="num">200K</div><div class="label">Context Window (tokens)</div></div>
+    <div class="stat-box"><div class="num">50+</div><div class="label">MCP Connectors</div></div>
+    <div class="stat-box"><div class="num">10+</div><div class="label">Built-in Skills</div></div>
+    <div class="stat-box"><div class="num">∞</div><div class="label">Custom Commands</div></div>
+  </div>
+  <div class="sub-title">⚙️ โครงสร้างการทำงาน</div>
+  <div class="flow">
+    <div class="flow-step">📝 คุณพิมพ์ prompt</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">🧠 Claude วิเคราะห์</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">🔧 ใช้ Tools</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">✅ ส่งผลลัพธ์</div>
+  </div>
+  <div class="info"><span class="icon">ℹ️</span><div><strong>Claude อ่านได้ทั้ง Codebase</strong> — ไม่ใช่แค่ไฟล์ที่คุณเปิด แต่อ่าน project structure ทั้งหมด trace dependency และ data flow ข้ามไฟล์ได้</div></div>
+  <div class="section-title">🎛️ Permission Modes — 4 โหมดสำคัญ</div>
+  <div class="mode-grid">
+    <div class="mode-card"><div class="mode-name">🟢 Default Mode</div><p>Claude ถามก่อนทุก action — แก้ไขไฟล์ รัน command ต้องอนุมัติทีละครั้ง</p><div class="shortcut">ปลอดภัยสูงสุด · production</div></div>
+    <div class="mode-card"><div class="mode-name">📋 Plan Mode</div><p>อ่านอย่างเดียว ห้ามแก้ไข — ใช้วิเคราะห์ก่อนลงมือ ลด bug ได้ 30%+</p><div class="shortcut">Shift+Tab → Plan</div></div>
+    <div class="mode-card"><div class="mode-name">✏️ Accept Edits</div><p>อนุมัติการแก้ไขไฟล์อัตโนมัติ แต่ Bash commands ยังต้องขออนุญาต</p><div class="shortcut">เหมาะกับ prototyping</div></div>
+    <div class="mode-card"><div class="mode-name">⚡ Bypass Mode</div><p>ทุก tool อนุมัติอัตโนมัติ ยกเว้น deny rules — เร็วสุด แต่ต้องระวัง</p><div class="shortcut">ใช้ใน sandbox เท่านั้น</div></div>
+  </div>
+  <div class="warn"><span class="icon">⚠️</span><div><strong>ข้อควรระวัง Bypass Mode</strong> — อย่าใช้ใน production repo โดยตรง ควรใช้คู่กับ git worktree หรือ sandbox environment</div></div>
+  <div class="section-title">⌨️ คำสั่งพื้นฐาน</div>
+  <table class="cmd-table">
+    <thead><tr><th>คำสั่ง</th><th>ทำอะไร</th><th>หมายเหตุ</th></tr></thead>
+    <tbody>
+      <tr><td class="cmd">claude</td><td class="desc">เปิด Claude Code แบบ interactive</td><td class="desc">เริ่มต้นใช้งาน</td></tr>
+      <tr><td class="cmd">claude "prompt"</td><td class="desc">รันคำสั่งเดียวแล้วออก</td><td class="desc">Non-interactive</td></tr>
+      <tr><td class="cmd">claude --print</td><td class="desc">Print output แล้วออก ใช้ใน scripts</td><td class="desc">-p ก็ได้</td></tr>
+      <tr><td class="cmd">claude --model</td><td class="desc">เลือก model</td><td class="desc">sonnet/opus/haiku</td></tr>
+      <tr><td class="cmd">/help</td><td class="desc">แสดงคำสั่งทั้งหมด</td><td class="desc">ใน session</td></tr>
+      <tr><td class="cmd">/cost</td><td class="desc">ดู token usage และค่าใช้จ่าย</td><td class="desc">ตรวจ budget</td></tr>
+    </tbody>
+  </table>
+  <div class="section-title">🗂️ โครงสร้างไฟล์สำคัญ</div>
+  <div class="code-block"><span class="label">Structure</span>
+your-project/
+├── <span class="c-cmd">CLAUDE.md</span>          <span class="c-comment"># Project memory — Claude อ่านทุก session</span>
+├── <span class="c-cmd">.claudeignore</span>      <span class="c-comment"># ไฟล์ที่ไม่ต้องอ่าน (เหมือน .gitignore)</span>
+└── <span class="c-cmd">.claude/</span>
+    ├── <span class="c-cmd">settings.json</span>   <span class="c-comment"># Permission rules</span>
+    ├── <span class="c-cmd">commands/</span>        <span class="c-comment"># Custom slash commands (.md)</span>
+    └── <span class="c-cmd">agents/</span>          <span class="c-comment"># Custom subagents</span>
+
+~/.claude/
+├── <span class="c-cmd">CLAUDE.md</span>          <span class="c-comment"># Global preferences (ทุก project)</span>
+└── <span class="c-cmd">keybindings.json</span>   <span class="c-comment"># Custom shortcuts</span>
+</div>
+  <div class="nav-arrows"><button class="nav-btn" onclick="show('s2')">ต่อไป: เพิ่มประสิทธิภาพ →</button></div>
+</section>
+
+
+<section id="s2" class="content-section">
+  <div class="hero">
+    <h2>⚡ เพิ่มประสิทธิภาพ</h2>
+    <p>เทคนิคและเครื่องมือที่ทำให้ Claude Code ทำงานเร็วขึ้น แม่นยำขึ้น และอัตโนมัติมากขึ้น</p>
+  </div>
+
+  <div class="section-title">📄 CLAUDE.md — หน่วยความจำของ Project</div>
+  <p>ไฟล์ที่ Claude Code อ่านอัตโนมัติทุกครั้งที่เริ่ม session เหมือน briefing document สำหรับ AI</p>
+  <div class="card-grid">
+    <div class="card"><div class="card-icon">🌍</div><h4>Global CLAUDE.md</h4><p><code>~/.claude/CLAUDE.md</code> — ใช้กับทุก project เก็บ preferences ส่วนตัว เช่น ภาษา code style</p></div>
+    <div class="card"><div class="card-icon">📁</div><h4>Project CLAUDE.md</h4><p>ที่ root ของ project — tech stack, architecture, build commands, conventions เฉพาะ project</p></div>
+  </div>
+  <div class="code-block"><span class="label">CLAUDE.md ตัวอย่าง</span>
+<span class="c-comment"># Project: E-Commerce API</span>
+<span class="c-key">## Tech Stack</span>
+- Node.js 20 + Express 5 + TypeScript
+- PostgreSQL 16 (Drizzle ORM) + Redis
+
+<span class="c-key">## คำสั่งสำคัญ</span>
+- Build: `<span class="c-cmd">bun run build</span>`  <span class="c-comment"># ใช้ bun ไม่ใช่ npm!</span>
+- Test:  `<span class="c-cmd">bun test</span>`
+- Dev:   `<span class="c-cmd">bun dev</span>`
+
+<span class="c-key">## กฎสำคัญ (Imperative)</span>
+- ใช้ async/await เสมอ ห้ามใช้ callback
+- Error ทุกตัวต้อง log ด้วย logger.error()
+- ห้ามแก้ไขไฟล์ใน /src/generated/ (auto-generated)
+
+<span class="c-key">## โครงสร้าง</span>
+- /src/routes/   — API endpoints
+- /src/services/ — Business logic
+- /src/models/   — DB schemas
+</div>
+  <div class="tip"><span class="icon">✅</span><div><strong>Imperative Style ได้ผล 94%</strong> — เขียนแบบ "ใช้ async/await เสมอ" ดีกว่า "ควรจะใช้" compliance rate ต่างกัน 21%</div></div>
+  <div class="warn"><span class="icon">⚠️</span><div><strong>ความยาวไม่เกิน 200 บรรทัด</strong> — CLAUDE.md ที่ยาวเกินทำให้ใช้ token มากขึ้นและตอบแย่ลง รัน <code>/init</code> เพื่อสร้างอัตโนมัติ</div></div>
+
+  <div class="section-title">🚫 .claudeignore — ตัดไฟล์ที่ไม่จำเป็น</div>
+  <div class="code-block"><span class="label">.claudeignore</span>
+<span class="c-comment"># Build outputs</span>
+dist/
+build/
+.next/
+
+<span class="c-comment"># Dependencies</span>
+node_modules/
+vendor/
+
+<span class="c-comment"># Generated + Lock files</span>
+src/generated/
+package-lock.json
+bun.lockb
+
+<span class="c-comment"># Logs</span>
+*.log
+coverage/
+</div>
+  <div class="tip"><span class="icon">✅</span><div><strong>ลด response time ได้ถึง 60%</strong> — โปรเจค 1,000 ไฟล์ที่ใช้ .claudeignore ที่ดีตอบเร็วจาก 8 วินาที เหลือ 3 วินาที</div></div>
+
+  <div class="section-title">📟 Slash Commands ที่ต้องรู้</div>
+  <table class="cmd-table">
+    <thead><tr><th>คำสั่ง</th><th>ทำอะไร</th><th>ระดับ</th></tr></thead>
+    <tbody>
+      <tr><td class="cmd">/help</td><td class="desc">แสดงคำสั่งทั้งหมด</td><td><span class="badge badge-green">Beginner</span></td></tr>
+      <tr><td class="cmd">/clear</td><td class="desc">ลบ history ทั้งหมด เริ่มใหม่</td><td><span class="badge badge-green">Beginner</span></td></tr>
+      <tr><td class="cmd">/compact</td><td class="desc">บีบอัด history ประหยัด token</td><td><span class="badge badge-yellow">Intermediate</span></td></tr>
+      <tr><td class="cmd">/init</td><td class="desc">สร้าง CLAUDE.md จาก project อัตโนมัติ</td><td><span class="badge badge-green">Beginner</span></td></tr>
+      <tr><td class="cmd">/cost</td><td class="desc">ดู token usage และค่าใช้จ่าย</td><td><span class="badge badge-green">Beginner</span></td></tr>
+      <tr><td class="cmd">/model</td><td class="desc">เปลี่ยน model</td><td><span class="badge badge-yellow">Intermediate</span></td></tr>
+      <tr><td class="cmd">/skills</td><td class="desc">แสดง Skills ทั้งหมดที่ available</td><td><span class="badge badge-yellow">Intermediate</span></td></tr>
+      <tr><td class="cmd">/mcp</td><td class="desc">จัดการ MCP connections และ auth</td><td><span class="badge badge-purple">Advanced</span></td></tr>
+      <tr><td class="cmd">/hooks</td><td class="desc">ดู hooks ที่ config ไว้ทั้งหมด</td><td><span class="badge badge-purple">Advanced</span></td></tr>
+      <tr><td class="cmd">/keybindings</td><td class="desc">เปิด keybindings.json</td><td><span class="badge badge-yellow">Intermediate</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-title">🔨 Custom Commands — สร้างคำสั่งเอง</div>
+  <p>สร้างไฟล์ .md ใน <code>.claude/commands/</code> — ใช้เป็น slash command ได้ทันที ใช้ <code>$ARGUMENTS</code> รับ parameter</p>
+  <div class="code-block"><span class="label">.claude/commands/review-pr.md</span>
+ทำการ Code Review สำหรับ PR #$ARGUMENTS
+
+1. รัน `gh pr diff $ARGUMENTS`
+2. ตรวจหา: logic errors, security issues, missing error handling
+3. สรุปเป็น:
+   - 🔴 Critical: ต้องแก้ก่อน merge
+   - 🟡 Warning: ควรแก้ถ้ามีเวลา
+   - 🟢 Suggestion: ปรับปรุงได้
+
+<span class="c-comment"># ใช้งาน:</span> <span class="c-cmd">/review-pr 123</span>
+</div>
+
+  <div class="section-title">🎣 Hooks — Automation อัตโนมัติ</div>
+  <div class="card-grid">
+    <div class="card"><div class="card-icon">🔄</div><h4>PostToolUse</h4><p>รันหลังใช้ tool เช่น auto-format หลังแก้ไขไฟล์</p></div>
+    <div class="card"><div class="card-icon">🚦</div><h4>UserPromptSubmit</h4><p>รันทุกครั้งที่ส่ง prompt inject context หรือ validate</p></div>
+    <div class="card"><div class="card-icon">🎬</div><h4>SessionStart</h4><p>Setup environment เมื่อเริ่ม session</p></div>
+    <div class="card"><div class="card-icon">🔔</div><h4>Notification</h4><p>ส่ง alert เมื่อ Claude ต้องการ input หรืองานเสร็จ</p></div>
+  </div>
+  <div class="code-block"><span class="label">~/.claude/settings.json</span>
+{
+  "<span class="c-key">hooks</span>": {
+    "<span class="c-val">PostToolUse</span>": [{
+      "<span class="c-key">matcher</span>": "<span class="c-str">Edit|Write</span>",
+      "<span class="c-key">hooks</span>": [{
+        "<span class="c-key">type</span>": "<span class="c-str">command</span>",
+        "<span class="c-key">command</span>": "<span class="c-str">prettier --write "$CLAUDE_TOOL_INPUT_FILE_PATH"</span>"
+      }]
+    }]
+  }
+}
+</div>
+
+  <div class="section-title">⌨️ Keyboard Shortcuts</div>
+  <table class="cmd-table">
+    <thead><tr><th>Shortcut</th><th>ทำอะไร</th></tr></thead>
+    <tbody>
+      <tr><td class="cmd">Shift+Tab</td><td class="desc">วนเปลี่ยน mode (Default → Plan → Accept Edits)</td></tr>
+      <tr><td class="cmd">Ctrl+C</td><td class="desc">หยุด Claude กลางคัน</td></tr>
+      <tr><td class="cmd">Esc Esc</td><td class="desc">ล้าง input หรือ browse history</td></tr>
+      <tr><td class="cmd">Ctrl+A / Ctrl+E</td><td class="desc">ไปต้นบรรทัด / ปลายบรรทัด</td></tr>
+      <tr><td class="cmd">Option+F / Option+B</td><td class="desc">เลื่อน cursor ทีละคำ</td></tr>
+      <tr><td class="cmd">Ctrl+W</td><td class="desc">ลบคำก่อนหน้า</td></tr>
+    </tbody>
+  </table>
+  <div class="nav-arrows">
+    <button class="nav-btn" onclick="show('s1')">← เริ่มต้น</button>
+    <button class="nav-btn" onclick="show('s3')">ต่อไป: ลด Token →</button>
+  </div>
+</section>
+
+
+<section id="s3" class="content-section">
+  <div class="hero">
+    <h2>💰 ลดการใช้ Token</h2>
+    <p>เทคนิคที่ช่วยประหยัด token ได้ 40–70% โดยไม่ลดคุณภาพงาน</p>
+  </div>
+  <div class="stats">
+    <div class="stat-box"><div class="num">40-70%</div><div class="label">ประหยัด token ได้โดยเฉลี่ย</div></div>
+    <div class="stat-box"><div class="num">60%</div><div class="label">.claudeignore ลด context</div></div>
+    <div class="stat-box"><div class="num">94%</div><div class="label">Imperative CLAUDE.md compliance</div></div>
+  </div>
+
+  <div class="section-title">🗜️ /compact — บีบอัด Context</div>
+  <div class="code-block">
+<span class="c-comment"># บีบอัดแบบปกติ</span>
+<span class="c-cmd">/compact</span>
+
+<span class="c-comment"># บอก focus ว่าอะไรสำคัญ</span>
+<span class="c-cmd">/compact Focus on code changes, discard test outputs</span>
+
+<span class="c-comment"># ดูการใช้ token ปัจจุบัน</span>
+<span class="c-cmd">/cost</span>
+</div>
+  <div class="tip"><span class="icon">✅</span><div><strong>/compact เก็บสิ่งสำคัญไว้</strong> — ตัด file contents และ intermediate reasoning ทิ้ง แต่เก็บ decisions, code changes, current state ไว้ครบ</div></div>
+
+  <div class="section-title">🧹 /clear — เริ่มใหม่หมดเลย</div>
+  <div class="code-block">
+<span class="c-comment"># ใช้เมื่อเปลี่ยนงานใหม่ที่ไม่เกี่ยวกัน</span>
+<span class="c-cmd">/clear</span>
+<span class="c-comment"># ต่างจาก /compact: /clear ลบ history ทิ้งทั้งหมด</span>
+</div>
+
+  <div class="section-title">📌 Specific Prompting</div>
+  <div class="card-grid">
+    <div class="card" style="border-color:#ef4444"><div class="card-icon">❌</div><h4>Vague (ใช้ token เยอะ)</h4><p style="color:#f87171">"Make the auth better"</p><p>Claude ต้องสำรวจทั้ง codebase เพื่อเดาว่า "better" หมายถึงอะไร</p></div>
+    <div class="card" style="border-color:#22c55e"><div class="card-icon">✅</div><h4>Specific (ประหยัด token)</h4><p style="color:#4ade80">"ใน src/auth/login.ts เพิ่ม rate limiting: max 5 attempts/IP/minute, return 429 + retry-after header"</p></div>
+  </div>
+  <div class="code-block">
+<span class="c-comment"># Template ที่ดี: File + Action + Expected Output</span>
+"ใน <span class="c-str">[ชื่อไฟล์]</span>, <span class="c-val">[action]</span> เพื่อ <span class="c-ok">[ผลลัพธ์ที่คาดหวัง]</span>"
+
+<span class="c-comment"># ตัวอย่าง:</span>
+"ใน src/api/users.ts เพิ่ม pagination สำหรับ GET /users
+ params: page (default 1), limit (default 20, max 100)
+ return: { data, total, page, totalPages }"
+</div>
+
+  <div class="section-title">🤖 Model Selection</div>
+  <table class="cmd-table">
+    <thead><tr><th>Model</th><th>เหมาะกับ</th><th>ต้นทุน</th></tr></thead>
+    <tbody>
+      <tr><td class="cmd">haiku-4-5</td><td class="desc">format, rename, simple edits — งานง่ายเร็ว</td><td><span class="badge badge-green">ต่ำสุด</span></td></tr>
+      <tr><td class="cmd">sonnet-4-6 ⭐</td><td class="desc">coding, debugging, refactoring ทั่วไป — ค่า default ที่ดีที่สุด</td><td><span class="badge badge-yellow">ปานกลาง</span></td></tr>
+      <tr><td class="cmd">opus-4-6</td><td class="desc">architecture, complex debugging, research</td><td><span class="badge badge-red">สูงสุด</span></td></tr>
+    </tbody>
+  </table>
+  <div class="pro"><span class="icon">⭐</span><div><strong>Plan ด้วย Opus, Code ด้วย Sonnet</strong> — ใช้ Opus ใน Plan Mode วางแผน แล้วสลับเป็น Sonnet ตอน implement ประหยัดค่าใช้จ่ายได้มาก</div></div>
+
+  <div class="section-title">📋 Token Optimization Checklist</div>
+  <div class="code-block">
+<span class="c-ok">✓</span> สร้าง .claudeignore ตัด node_modules, dist, logs
+<span class="c-ok">✓</span> CLAUDE.md ไม่เกิน 200 บรรทัด เขียนแบบ imperative
+<span class="c-ok">✓</span> ใช้ /clear เมื่อเปลี่ยนงานใหม่ที่ไม่เกี่ยวกัน
+<span class="c-ok">✓</span> ใช้ /compact เมื่อ session ยาว
+<span class="c-ok">✓</span> Prompt ระบุ file path + expected output ชัดเจน
+<span class="c-ok">✓</span> ใช้ Sonnet เป็น default ไม่ใช่ Opus
+
+<span class="c-key">✗</span> Prompt กว้างๆ เช่น "improve the code"
+<span class="c-key">✗</span> CLAUDE.md ที่ยาวเกิน 500 บรรทัด
+<span class="c-key">✗</span> ใช้ Opus ทุกงาน ไม่มีเหตุผล
+</div>
+  <div class="nav-arrows">
+    <button class="nav-btn" onclick="show('s2')">← เพิ่มประสิทธิภาพ</button>
+    <button class="nav-btn" onclick="show('s4')">ต่อไป: Skills →</button>
+  </div>
+</section>
+
+
+<section id="s4" class="content-section">
+  <div class="hero">
+    <h2>🎯 Skills / Extensions</h2>
+    <p>Skills คือ reusable workflows ที่ขยายความสามารถของ Claude Code — ทั้ง built-in และสร้างเองได้</p>
+  </div>
+
+  <div class="section-title">💡 Skills คืออะไร และทำงานอย่างไร</div>
+  <div class="flow">
+    <div class="flow-step">คุณพิมพ์ request</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Claude match กับ Skills</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">โหลด Skill ที่ตรง</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">ทำงานตาม Skill</div>
+  </div>
+  <div class="info"><span class="icon">ℹ️</span><div><strong>Skills โหลด on-demand</strong> — ไม่โหลดทุก skill ตลอดเวลา โหลดเฉพาะเมื่อต้องการ ประหยัด context มากกว่าใส่ทุกอย่างใน CLAUDE.md ได้ถึง 82%</div></div>
+
+  <div class="section-title">📦 Built-in Skills ทั้งหมด</div>
+
+  <div class="skill-card">
+    <div class="skill-icon">📄</div>
+    <div class="skill-body">
+      <h4>PDF Skill</h4>
+      <div class="trigger">trigger: "PDF", ".pdf", "อ่าน PDF", "สร้าง PDF"</div>
+      <p>อ่านและดึงข้อมูลจาก PDF · สร้าง PDF ใหม่ · รวม/แยก PDF · เพิ่ม watermark · กรอกฟอร์ม · OCR</p>
+      <span class="badge badge-green">Beginner</span>
+    </div>
+  </div>
+
+  <div class="skill-card">
+    <div class="skill-icon">📊</div>
+    <div class="skill-body">
+      <h4>XLSX Skill</h4>
+      <div class="trigger">trigger: ".xlsx", "spreadsheet", "Excel", "สเปรดชีต"</div>
+      <p>สร้าง/แก้ไข Excel · ใส่สูตร · จัดรูปแบบ · วิเคราะห์ข้อมูล · สร้างกราฟ · แปลง CSV→Excel</p>
+      <span class="badge badge-green">Beginner</span>
+    </div>
+  </div>
+
+  <div class="skill-card">
+    <div class="skill-icon">📝</div>
+    <div class="skill-body">
+      <h4>DOCX Skill</h4>
+      <div class="trigger">trigger: ".docx", "Word document", "รายงาน", "Word doc"</div>
+      <p>สร้าง Word document · จัดรูปแบบ TOC heading page number · track changes · letterhead</p>
+      <span class="badge badge-green">Beginner</span>
+    </div>
+  </div>
+
+  <div class="skill-card">
+    <div class="skill-icon">📑</div>
+    <div class="skill-body">
+      <h4>PPTX Skill</h4>
+      <div class="trigger">trigger: ".pptx", "presentation", "slides", "deck", "สไลด์"</div>
+      <p>สร้าง PowerPoint · จัดการ layout · ใส่ chart และรูป · speaker notes · สร้างจาก template</p>
+      <span class="badge badge-green">Beginner</span>
+    </div>
+  </div>
+
+  <div class="skill-card">
+    <div class="skill-icon">🎨</div>
+    <div class="skill-body">
+      <h4>Canvas Design Skill</h4>
+      <div class="trigger">trigger: "poster", "design", "ออกแบบ", "visual", "artwork"</div>
+      <p>ออกแบบภาพ static สวยงาม output เป็น .png และ .pdf — โปสเตอร์ infographic social media</p>
+      <span class="badge badge-yellow">Intermediate</span>
+    </div>
+  </div>
+
+  <div class="skill-card">
+    <div class="skill-icon">🖼️</div>
+    <div class="skill-body">
+      <h4>Algorithmic Art Skill</h4>
+      <div class="trigger">trigger: "generative art", "flow field", "particle system", "algorithmic"</div>
+      <p>สร้างงานศิลปะ generative ด้วย p5.js — flow fields, particle systems, seeded randomness</p>
+      <span class="badge badge-purple">Advanced</span>
+    </div>
+  </div>
+
+  <div class="skill-card">
+    <div class="skill-icon">🎭</div>
+    <div class="skill-body">
+      <h4>Theme Factory Skill</h4>
+      <div class="trigger">trigger: "theme", "styling", "ธีม" — ใช้หลังสร้าง artifact</div>
+      <p>จัดการธีมสีและ font สำหรับ artifacts มี 10 preset themes หรือสร้าง custom theme ได้</p>
+      <span class="badge badge-yellow">Intermediate</span>
+    </div>
+  </div>
+
+  <div class="skill-card">
+    <div class="skill-icon">⏰</div>
+    <div class="skill-body">
+      <h4>Schedule Skill</h4>
+      <div class="trigger">trigger: "schedule", "recurring task", "ทำอัตโนมัติ", "cron"</div>
+      <p>สร้าง scheduled task ที่รันได้ทั้ง on-demand และ automatic interval</p>
+      <span class="badge badge-yellow">Intermediate</span>
+    </div>
+  </div>
+
+  <div class="skill-card">
+    <div class="skill-icon">💬</div>
+    <div class="skill-body">
+      <h4>Slack GIF Creator Skill</h4>
+      <div class="trigger">trigger: "GIF for Slack", "animated GIF", "Slack animation"</div>
+      <p>สร้าง animated GIF ที่ optimize สำหรับ Slack — ขนาดพอดี animation smooth</p>
+      <span class="badge badge-yellow">Intermediate</span>
+    </div>
+  </div>
+
+  <div class="skill-card">
+    <div class="skill-icon">🔧</div>
+    <div class="skill-body">
+      <h4>Skill Creator Skill</h4>
+      <div class="trigger">trigger: "create skill", "new skill", "สร้าง skill ใหม่"</div>
+      <p>สร้าง custom skills ใหม่ · แก้ไขปรับปรุง skills · รัน eval ทดสอบ performance</p>
+      <span class="badge badge-purple">Advanced</span>
+    </div>
+  </div>
+
+  <div class="section-title">🛠️ สร้าง Custom Skill เอง</div>
+  <div class="code-block"><span class="label">.claude/skills/my-skill/SKILL.md</span>
+---
+name: security-review
+description: <span class="c-str">เมื่อ user ขอ review security ของ code</span>
+user-invocable: true
+allowed-tools: Read, Grep, Glob
+---
+
+ทำการ security review สำหรับ code ที่ระบุ:
+
+1. ตรวจ SQL Injection ใน database queries
+2. ตรวจ XSS ใน template rendering
+3. ตรวจ authentication และ authorization
+4. ตรวจ hardcoded secrets หรือ credentials
+5. สรุปเป็น report พร้อม severity: Critical/High/Medium/Low
+</div>
+  <div class="nav-arrows">
+    <button class="nav-btn" onclick="show('s3')">← ลด Token</button>
+    <button class="nav-btn" onclick="show('s5')">ต่อไป: Connectors →</button>
+  </div>
+</section>
+
+
+<section id="s5" class="content-section">
+  <div class="hero">
+    <h2>🔌 Connectors / MCP</h2>
+    <p>Model Context Protocol — มาตรฐานเชื่อมต่อ AI กับ external tools และ services ทุกชนิด</p>
+  </div>
+
+  <div class="section-title">🧩 MCP คืออะไร</div>
+  <p>MCP เปรียบเหมือน <strong>"USB-C for AI"</strong> — มาตรฐาน open protocol ของ Anthropic ที่ทำให้ Claude เชื่อมต่อกับ external systems ได้อย่างปลอดภัยและมีโครงสร้าง</p>
+  <div class="card-grid-3">
+    <div class="card"><div class="card-icon">🔒</div><h4>Secure</h4><p>Auth ผ่าน browser session — Claude ไม่เห็น password ของคุณ</p></div>
+    <div class="card"><div class="card-icon">🔌</div><h4>Standardized</h4><p>Protocol เดียวกันทุก connector — เรียนรู้ครั้งเดียวใช้ได้ทุกที่</p></div>
+    <div class="card"><div class="card-icon">⚡</div><h4>Extensible</h4><p>สร้าง custom MCP server เองได้ เชื่อมกับ internal systems</p></div>
+  </div>
+
+  <div class="section-title">➕ วิธีเพิ่ม Connector</div>
+  <div class="code-block">
+<span class="c-comment"># รูปแบบทั่วไป</span>
+<span class="c-cmd">claude mcp add --transport sse [ชื่อ] [MCP server URL]</span>
+
+<span class="c-comment"># ตัวอย่าง</span>
+<span class="c-cmd">claude mcp add --transport sse asana https://mcp.asana.com/sse</span>
+
+<span class="c-comment"># ดู connections ทั้งหมด + auth</span>
+<span class="c-cmd">/mcp</span>
+</div>
+
+  <div class="section-title">🌟 Connectors ยอดนิยม</div>
+
+  <div class="connector-card">
+    <div class="top"><div class="logo">📧</div><div><h4>Gmail Connector</h4><span class="badge badge-green">Popular</span></div></div>
+    <p>ค้นหา อ่าน ร่าง และจัดการอีเมลผ่าน natural language</p>
+    <div class="code-block" style="margin:0">"ค้นหาอีเมลจาก boss@company.com สัปดาห์นี้"
+"ร่างอีเมลตอบว่าจะส่งรายงานพรุ่งนี้"
+"สรุปอีเมลที่ยังไม่ได้อ่านวันนี้"</div>
+  </div>
+
+  <div class="connector-card">
+    <div class="top"><div class="logo">🎨</div><div><h4>Canva Connector</h4><span class="badge badge-yellow">Design</span></div></div>
+    <p>สร้าง แก้ไข จัดการ designs assets และ folders ผ่าน Claude</p>
+    <div class="code-block" style="margin:0">"สร้าง social media post สำหรับ campaign ใหม่"
+"แสดง designs ทั้งหมดใน folder Marketing"
+"export design 'Summer Sale' เป็น PNG"</div>
+  </div>
+
+  <div class="connector-card">
+    <div class="top"><div class="logo">🌐</div><div><h4>Browser / Chrome Control</h4><span class="badge badge-purple">Advanced</span></div></div>
+    <p>ควบคุม Chrome browser จริงๆ คลิก กรอกฟอร์ม screenshot monitor network debug</p>
+    <div class="code-block" style="margin:0"><span class="c-comment"># ติดตั้ง: Claude in Chrome Extension (Official)</span>
+"เปิด localhost:3000 และทดสอบ login form"
+"screenshot หน้าเว็บตรวจ layout"
+"monitor API calls เมื่อกด Submit"</div>
+  </div>
+
+  <div class="connector-card">
+    <div class="top"><div class="logo">📋</div><div><h4>Asana Connector</h4><span class="badge badge-blue">Productivity</span></div></div>
+    <p>จัดการ tasks และ projects ใน Asana ผ่าน Claude</p>
+    <div class="code-block" style="margin:0">"แสดง tasks ที่ assign ให้ฉันใน Sprint นี้"
+"สร้าง task 'Fix login bug' ใน project Backend"</div>
+  </div>
+
+  <div class="connector-card">
+    <div class="top"><div class="logo">💬</div><div><h4>Slack Connector</h4><span class="badge badge-blue">Communication</span></div></div>
+    <p>ส่งข้อความ อ่าน channel จัดการ workspace ผ่าน Claude</p>
+    <div class="code-block" style="margin:0">"ส่งข้อความใน #dev-team ว่า deployment เสร็จแล้ว"
+"สรุปข้อความใน #general วันนี้"</div>
+  </div>
+
+  <div class="section-title">📦 Connectors อื่นๆ (50+ รวมทั้งหมด)</div>
+  <div class="card-grid-3">
+    <div class="card"><h4>📁 Google Drive</h4><p>จัดการไฟล์ใน Drive</p></div>
+    <div class="card"><h4>📓 Notion</h4><p>อ่านและเขียน Notion pages</p></div>
+    <div class="card"><h4>🐙 GitHub</h4><p>จัดการ repos, PRs, Issues</p></div>
+    <div class="card"><h4>📊 Amplitude</h4><p>ดู analytics data</p></div>
+    <div class="card"><h4>📦 Box</h4><p>Enterprise file storage</p></div>
+    <div class="card"><h4>📐 Figma</h4><p>อ่าน design specs</p></div>
+  </div>
+  <div class="pro"><span class="icon">⭐</span><div><strong>สร้าง Custom MCP Server</strong> — ถ้า connector ที่ต้องการไม่มีใน directory สร้าง MCP server เองได้ เชื่อมกับ internal database, legacy API, หรือระบบของบริษัท</div></div>
+  <div class="nav-arrows">
+    <button class="nav-btn" onclick="show('s4')">← Skills</button>
+    <button class="nav-btn" onclick="show('s6')">ต่อไป: Agents →</button>
+  </div>
+</section>
+
+
+<section id="s6" class="content-section">
+  <div class="hero">
+    <h2>🤖 Agents &amp; Subagents</h2>
+    <p>ระบบ multi-agent ที่ทำงานพร้อมกันหลายงาน แต่ละ agent มี context แยกกัน ไม่รบกวนกัน</p>
+  </div>
+
+  <div class="section-title">🧩 Agent Tool คืออะไร</div>
+  <p>Agent Tool คือการที่ Claude หลัก spawn <strong>subagent</strong> ขึ้นมาทำงานแยก — แต่ละ subagent มี 200K token context window ของตัวเอง ทำงานอิสระ และส่งผลลัพธ์กลับมาเมื่อเสร็จ</p>
+
+  <div class="card-grid">
+    <div class="card"><div class="card-icon">🔍</div><h4>Explore Agent</h4><p>สำรวจ codebase ค้นหาไฟล์ ตอบคำถามเกี่ยวกับโค้ด เร็วและมีประสิทธิภาพ</p><span class="badge badge-green">Read-only</span></div>
+    <div class="card"><div class="card-icon">📐</div><h4>Plan Agent</h4><p>ออกแบบ implementation strategy วิเคราะห์ trade-offs สร้าง step-by-step plan</p><span class="badge badge-yellow">Read-only</span></div>
+    <div class="card"><div class="card-icon">🔧</div><h4>General-purpose Agent</h4><p>ทำงานได้ทุกอย่าง มี access ทุก tools เหมาะกับงาน multi-step ที่ซับซ้อน</p><span class="badge badge-purple">Full access</span></div>
+    <div class="card"><div class="card-icon">❓</div><h4>claude-code-guide Agent</h4><p>ตอบคำถามเกี่ยวกับ Claude Code, Claude API, Anthropic SDK โดยเฉพาะ</p><span class="badge badge-blue">Q&amp;A</span></div>
+  </div>
+
+  <div class="sub-title">⚡ Parallel Execution — 3x เร็วกว่า</div>
+  <div class="code-block">
+<span class="c-comment"># ส่ง 3 agents ทำงานพร้อมกัน (แทนที่จะทำทีละงาน)</span>
+
+Agent 1: <span class="c-str">สำรวจ API endpoints ทั้งหมด</span>
+Agent 2: <span class="c-str">ค้นหา security vulnerabilities</span>
+Agent 3: <span class="c-str">ตรวจ test coverage</span>
+
+<span class="c-comment"># แต่ละ agent ไม่รู้จักงานของกันและกัน — ไม่มี context pollution</span>
+</div>
+
+  <div class="section-title">🌿 Git Worktree — หลาย Branch พร้อมกัน</div>
+  <p>Worktree สร้าง working directory แยกใหม่ที่มี branch ของตัวเอง แต่ share git history กับ repo หลัก ป้องกัน file conflicts ระหว่าง agents</p>
+  <div class="code-block">
+<span class="c-comment"># เปิด Claude Code ใน worktree ใหม่</span>
+<span class="c-cmd">claude --worktree feature-auth</span>
+<span class="c-cmd">claude -w bugfix-123</span>
+
+<span class="c-comment"># กำหนดใน agent definition ให้ agent ได้ worktree ของตัวเอง</span>
+---
+isolation: worktree
+---
+</div>
+  <div class="tip"><span class="icon">✅</span><div><strong>Worktree + Parallel Agents = 10x Productivity</strong> — แต่ละ agent ทำงานใน worktree ของตัวเอง ไม่มี conflict กัน merge เมื่อเสร็จ</div></div>
+
+  <div class="section-title">✅ TodoWrite — ติดตามงาน Real-time</div>
+  <div class="card-grid-3">
+    <div class="card" style="border-color:#475569"><div class="card-icon">⏳</div><h4>pending</h4><p>งานที่ยังไม่เริ่ม รอคิว</p></div>
+    <div class="card" style="border-color:#eab308"><div class="card-icon">🔄</div><h4>in_progress</h4><p>กำลังทำอยู่ (ทีละงานเท่านั้น)</p></div>
+    <div class="card" style="border-color:#22c55e"><div class="card-icon">✅</div><h4>completed</h4><p>เสร็จสมบูรณ์แล้ว</p></div>
+  </div>
+
+  <div class="section-title">🔧 สร้าง Custom Subagent</div>
+  <div class="code-block"><span class="label">.claude/agents/security-reviewer.md</span>
+---
+name: security-reviewer
+description: <span class="c-str">ตรวจ security ของ code changes</span>
+tools: Read, Grep, Glob
+model: sonnet
+---
+
+คุณคือ security expert เชี่ยวชาญด้าน OWASP Top 10
+
+เมื่อได้รับ code ให้ตรวจ:
+1. SQL Injection
+2. XSS และ CSRF
+3. Authentication flaws
+4. Hardcoded secrets
+
+ส่งกลับ report พร้อม severity: Critical/High/Medium/Low
+</div>
+  <div class="nav-arrows">
+    <button class="nav-btn" onclick="show('s5')">← Connectors</button>
+    <button class="nav-btn" onclick="show('s7')">ต่อไป: Use Cases →</button>
+  </div>
+</section>
+
+
+<section id="s7" class="content-section">
+  <div class="hero">
+    <h2>💡 Use Cases &amp; ตัวอย่างจริง</h2>
+    <p>ตัวอย่างการใช้ Claude Code ในสถานการณ์จริง พร้อม prompt และผลลัพธ์ที่คาดหวัง</p>
+  </div>
+
+  <div class="section-title">👨‍💻 1. Software Development</div>
+
+  <div class="usecase-card">
+    <div class="tag">Feature Development</div>
+    <h4>สร้าง CRUD API ครบชุดใน 3 นาที</h4>
+    <div class="scenario">"สร้าง REST API สำหรับ User management มี CRUD ครบ, pagination, JWT auth, unit tests ใช้ Express + TypeScript + Drizzle ORM"</div>
+    <ul>
+      <li>Claude สร้างไฟล์ครบชุด: routes, controllers, services, models, tests</li>
+      <li>มี error handling, validation, และ OpenAPI spec</li>
+      <li>เขียน tests ให้ 80%+ coverage อัตโนมัติ</li>
+    </ul>
+  </div>
+
+  <div class="usecase-card">
+    <div class="tag">Debugging</div>
+    <h4>ตามหา Bug ข้ามไฟล์</h4>
+    <div class="scenario">"มี bug ที่ทำให้ user logout อัตโนมัติทุก 5 นาที แม้ตั้ง session timeout ไว้ 1 ชั่วโมง ช่วยหาสาเหตุ"</div>
+    <ul>
+      <li>Claude อ่าน auth middleware, session config, token refresh logic</li>
+      <li>trace data flow พบว่า refresh token endpoint ส่ง wrong expiry</li>
+      <li>แก้ไขพร้อมเพิ่ม test ป้องกัน regression</li>
+    </ul>
+  </div>
+
+  <div class="section-title">📄 2. Document Processing</div>
+
+  <div class="usecase-card">
+    <div class="tag">PDF + Excel Combo</div>
+    <h4>ดึงข้อมูลจาก PDF แล้วทำ Excel Report</h4>
+    <div class="scenario">"อ่าน sales_report_q1.pdf แล้วสร้าง Excel ที่มี summary table, รายละเอียดแยก region, และ chart แสดง trend"</div>
+    <ul>
+      <li>ใช้ PDF skill อ่านและ extract ข้อมูล</li>
+      <li>ใช้ XLSX skill สร้าง spreadsheet พร้อม formula และ chart</li>
+      <li>เสร็จในนาทีแทนที่จะใช้ชั่วโมง</li>
+    </ul>
+  </div>
+
+  <div class="usecase-card">
+    <div class="tag">Presentation</div>
+    <h4>สร้าง Pitch Deck จาก Concept</h4>
+    <div class="scenario">"สร้าง investor pitch deck 10 slides สำหรับ fintech startup ใส่: problem, solution, market size, traction, team, ask"</div>
+    <ul>
+      <li>ใช้ PPTX skill สร้าง slides ครบชุด</li>
+      <li>ใช้ Theme Factory ปรับ design ให้ professional</li>
+      <li>มี speaker notes ทุก slide</li>
+    </ul>
+  </div>
+
+  <div class="section-title">📊 3. Data Analysis &amp; Marketing</div>
+
+  <div class="usecase-card">
+    <div class="tag">Marketing Automation</div>
+    <h4>วิเคราะห์ Ad Performance ประหยัดเวลา 95%</h4>
+    <div class="scenario">"อ่าน ads_data.csv ที่มี 500 ads หา underperformers CTR &lt; 1%, สร้าง variations ใหม่ export เป็น Excel พร้อม A/B test suggestions"</div>
+    <ul>
+      <li>Anthropic Marketing team ใช้แบบนี้จริง — จากชั่วโมงเหลือ 15 นาที</li>
+      <li>ใช้ XLSX skill วิเคราะห์และสร้าง report ครบ</li>
+    </ul>
+  </div>
+
+  <div class="section-title">🔍 4. Code Review &amp; Testing</div>
+
+  <div class="usecase-card">
+    <div class="tag">Automated Review</div>
+    <h4>Review PR อัตโนมัติ ไม่ต้องรอ Human Reviewer</h4>
+    <div class="scenario">ตั้ง custom command /review-pr ใน CI/CD รันทุกครั้งที่มี PR ใหม่ผ่าน GitHub Actions</div>
+    <ul>
+      <li>ตรวจ logic errors และ security issues</li>
+      <li>ตรวจ missing tests และ edge cases</li>
+      <li>Comment บน GitHub PR โดยอัตโนมัติ</li>
+      <li>ทีมที่ใช้วิธีนี้ลด review time ได้ 30-60%</li>
+    </ul>
+  </div>
+
+  <div class="section-title">🌐 5. Browser Automation</div>
+
+  <div class="usecase-card">
+    <div class="tag">E2E Testing</div>
+    <h4>ทดสอบ Web App อัตโนมัติด้วย Chrome</h4>
+    <div class="scenario">"ทดสอบ checkout flow: login → เพิ่มสินค้า → กรอกที่อยู่ → ชำระเงิน → ตรวจว่า order confirmation ถูกต้อง"</div>
+    <ul>
+      <li>ใช้ Claude in Chrome Extension ควบคุม browser จริง</li>
+      <li>screenshot ทุก step เพื่อ documentation</li>
+      <li>monitor network requests ตรวจ API calls</li>
+    </ul>
+  </div>
+
+  <div class="section-title">🏗️ 6. Legacy Modernization</div>
+
+  <div class="usecase-card">
+    <div class="tag">Migration</div>
+    <h4>Migrate Legacy System ด้วย Claude Code</h4>
+    <div class="scenario">บริษัทการเงินใช้ Claude Code migrate จาก COBOL mainframe ไป modern microservices</div>
+    <ul>
+      <li>Claude อ่านและเข้าใจ COBOL logic ที่เขียนมา 30 ปี</li>
+      <li>สร้าง equivalent modern code พร้อม tests</li>
+      <li>ทำ compliance check ตาม regulatory requirements อัตโนมัติ</li>
+    </ul>
+  </div>
+
+  <div class="section-title">📈 ROI ที่ทีมได้รับจริง</div>
+  <div class="stats">
+    <div class="stat-box"><div class="num">30-60%</div><div class="label">ลด review time ด้วย /review-pr</div></div>
+    <div class="stat-box"><div class="num">3x</div><div class="label">เร็วขึ้นด้วย parallel agents</div></div>
+    <div class="stat-box"><div class="num">40-70%</div><div class="label">ประหยัด token</div></div>
+    <div class="stat-box"><div class="num">3 min</div><div class="label">สร้าง CRUD API ครบ</div></div>
+  </div>
+
+  <div class="pro"><span class="icon">⭐</span><div>
+    <strong>เริ่มต้นที่ไหนดี? — Quick Start Path</strong>
+    <ol style="margin-top:8px;padding-left:20px;color:var(--text-muted);font-size:13.5px">
+      <li>รัน <code>/init</code> สร้าง CLAUDE.md ใน project ของคุณ</li>
+      <li>สร้าง <code>.claudeignore</code> ตัด node_modules และ dist</li>
+      <li>เรียนรู้ <code>/compact</code> และ <code>/clear</code> ใช้ให้เป็นนิสัย</li>
+      <li>ทดลอง PDF/XLSX Skill กับงาน document จริง</li>
+      <li>ลอง <code>/review-pr</code> กับ PR ต่อไปของคุณ</li>
+    </ol>
+  </div></div>
+  <div class="nav-arrows">
+    <button class="nav-btn" onclick="show('s6')">← Agents</button>
+    <button class="nav-btn" onclick="show('s1')">กลับต้น: Fundamentals ↑</button>
+  </div>
+</section>
+
+
+<section id="s8" class="content-section">
+  <div class="hero">
+    <h2>⚡ Quick Reference Card</h2>
+    <p>รวมทุกอย่างที่ใช้บ่อยใน 1 หน้า — scan ได้เร็ว พิมพ์ได้เลย</p>
+  </div>
+
+  <div class="qr-grid">
+
+    <div class="qr-box">
+      <h4>📟 Slash Commands</h4>
+      <div class="qr-row"><span class="qr-key">/help</span><span class="qr-val">แสดงคำสั่งทั้งหมด</span></div>
+      <div class="qr-row"><span class="qr-key">/init</span><span class="qr-val">สร้าง CLAUDE.md อัตโนมัติ</span></div>
+      <div class="qr-row"><span class="qr-key">/compact</span><span class="qr-val">บีบอัด context</span></div>
+      <div class="qr-row"><span class="qr-key">/clear</span><span class="qr-val">ล้าง history ทั้งหมด</span></div>
+      <div class="qr-row"><span class="qr-key">/cost</span><span class="qr-val">ดู token ที่ใช้ไป</span></div>
+      <div class="qr-row"><span class="qr-key">/model</span><span class="qr-val">เปลี่ยน model</span></div>
+      <div class="qr-row"><span class="qr-key">/skills</span><span class="qr-val">Skills ที่ available</span></div>
+      <div class="qr-row"><span class="qr-key">/mcp</span><span class="qr-val">จัดการ Connectors</span></div>
+      <div class="qr-row"><span class="qr-key">/hooks</span><span class="qr-val">ดู Hooks ที่ตั้งไว้</span></div>
+    </div>
+
+    <div class="qr-box">
+      <h4>⌨️ Keyboard Shortcuts</h4>
+      <div class="qr-row"><span class="qr-key">Shift+Tab</span><span class="qr-val">วนเปลี่ยน Mode</span></div>
+      <div class="qr-row"><span class="qr-key">Ctrl+C</span><span class="qr-val">หยุด Claude กลางคัน</span></div>
+      <div class="qr-row"><span class="qr-key">Esc Esc</span><span class="qr-val">ล้าง input</span></div>
+      <div class="qr-row"><span class="qr-key">Ctrl+A / Ctrl+E</span><span class="qr-val">ต้น / ปลายบรรทัด</span></div>
+      <div class="qr-row"><span class="qr-key">Option+F / B</span><span class="qr-val">เลื่อน cursor ทีละคำ</span></div>
+      <div class="qr-row"><span class="qr-key">Ctrl+W</span><span class="qr-val">ลบคำก่อนหน้า</span></div>
+      <div class="qr-row"><span class="qr-key">← →</span><span class="qr-val">เลื่อน section (guide นี้)</span></div>
+    </div>
+
+    <div class="qr-box">
+      <h4>🎛️ Permission Modes</h4>
+      <div class="qr-row"><span class="qr-key">🟢 Default</span><span class="qr-val">ถามก่อนทุก action</span></div>
+      <div class="qr-row"><span class="qr-key">📋 Plan</span><span class="qr-val">อ่านอย่างเดียว (Shift+Tab)</span></div>
+      <div class="qr-row"><span class="qr-key">✏️ Accept Edits</span><span class="qr-val">auto approve file edits</span></div>
+      <div class="qr-row"><span class="qr-key">⚡ Bypass</span><span class="qr-val">auto approve ทุกอย่าง ⚠️</span></div>
+    </div>
+
+    <div class="qr-box">
+      <h4>🤖 Model Selection</h4>
+      <div class="qr-row"><span class="qr-key">haiku-4-5</span><span class="qr-val">งานง่าย เร็ว ถูก</span></div>
+      <div class="qr-row"><span class="qr-key">sonnet-4-6 ⭐</span><span class="qr-val">งานทั่วไป (default)</span></div>
+      <div class="qr-row"><span class="qr-key">opus-4-6</span><span class="qr-val">งานซับซ้อน แพง</span></div>
+      <div class="qr-row" style="margin-top:8px"><span style="font-size:11px;color:var(--text-dim)">💡 Plan ด้วย Opus → Code ด้วย Sonnet</span></div>
+    </div>
+
+    <div class="qr-box">
+      <h4>💰 Token Optimization</h4>
+      <div class="qr-row"><span class="qr-key">✓</span><span class="qr-val">สร้าง .claudeignore</span></div>
+      <div class="qr-row"><span class="qr-key">✓</span><span class="qr-val">CLAUDE.md &lt; 200 บรรทัด</span></div>
+      <div class="qr-row"><span class="qr-key">✓</span><span class="qr-val">/compact เมื่อ session ยาว</span></div>
+      <div class="qr-row"><span class="qr-key">✓</span><span class="qr-val">/clear เมื่อเปลี่ยนงานใหม่</span></div>
+      <div class="qr-row"><span class="qr-key">✓</span><span class="qr-val">ระบุ file path ใน prompt</span></div>
+      <div class="qr-row"><span class="qr-key">✓</span><span class="qr-val">ใช้ Sonnet เป็น default</span></div>
+    </div>
+
+    <div class="qr-box">
+      <h4>🎯 Skills ที่ใช้บ่อย</h4>
+      <div class="qr-row"><span class="qr-key">📄 PDF</span><span class="qr-val">อ่าน/สร้าง/แก้ PDF</span></div>
+      <div class="qr-row"><span class="qr-key">📊 XLSX</span><span class="qr-val">สเปรดชีต Excel</span></div>
+      <div class="qr-row"><span class="qr-key">📑 PPTX</span><span class="qr-val">PowerPoint slides</span></div>
+      <div class="qr-row"><span class="qr-key">📝 DOCX</span><span class="qr-val">Word document</span></div>
+      <div class="qr-row"><span class="qr-key">🎨 Canvas</span><span class="qr-val">ออกแบบ poster/visual</span></div>
+      <div class="qr-row"><span class="qr-key">⏰ Schedule</span><span class="qr-val">งานอัตโนมัติ/cron</span></div>
+    </div>
+
+  </div>
+
+  <div class="qr-box" style="margin-top:0">
+    <h4>📄 CLAUDE.md Minimal Template</h4>
+    <div class="code-block" style="margin:10px 0 0">
+<span class="c-comment"># Project: [ชื่อ project]</span>
+<span class="c-key">## Tech Stack</span>
+- [language/framework] + [database]
+
+<span class="c-key">## Commands</span>
+- Dev: `<span class="c-cmd">[dev command]</span>`
+- Test: `<span class="c-cmd">[test command]</span>`
+- Build: `<span class="c-cmd">[build command]</span>`
+
+<span class="c-key">## Rules</span>
+- [กฎสำคัญ 1 — imperative style]
+- [กฎสำคัญ 2]
+
+<span class="c-key">## Structure</span>
+- /src/[folder]/ — [description]
+</div>
+  </div>
+
+  <div class="qr-box" style="margin-top:16px">
+    <h4>🔌 เพิ่ม MCP Connector</h4>
+    <div class="code-block" style="margin:10px 0 0">
+<span class="c-cmd">claude mcp add --transport sse [name] [url]</span>
+<span class="c-comment"># ตัวอย่าง Asana:</span>
+<span class="c-cmd">claude mcp add --transport sse asana https://mcp.asana.com/sse</span>
+<span class="c-comment"># จัดการ auth:</span>
+<span class="c-cmd">/mcp</span>
+</div>
+  </div>
+
+  <div style="margin-top:24px;display:flex;gap:12px;align-items:center">
+    <button class="print-btn" onclick="printQuickRef()">🖨️ พิมพ์ Quick Reference</button>
+    <span style="font-size:12px;color:var(--text-dim)">หรือ Ctrl+P แล้วเลือก "Save as PDF"</span>
+  </div>
+
+  <div class="nav-arrows">
+    <button class="nav-btn" onclick="show('s7')">← Use Cases</button>
+    <button class="nav-btn" onclick="show('s1')">กลับต้น ↑</button>
+  </div>
+</section>
+
+
+  <!-- ═══════════════════════════════════ s9 ═══ -->
+  <section class="content-section" id="s9">
+    <div class="hero" style="background:linear-gradient(135deg,#7c3aed 0%,#db2777 50%,#ea580c 100%)">
+      <div class="hero-badge">🧩 Prompt Engineering</div>
+      <h1 class="hero-title">เทคนิค Prompt สำหรับ Coding</h1>
+      <p class="hero-sub">6 เทคนิคที่ทำให้ Claude เข้าใจงานได้ดีขึ้น ตอบได้แม่นยำขึ้น และประหยัด Token</p>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-num">6</div><div class="stat-label">เทคนิคหลัก</div></div>
+        <div class="stat"><div class="stat-num">40%+</div><div class="stat-label">ลด Error</div></div>
+        <div class="stat"><div class="stat-num">50%</div><div class="stat-label">ประหยัด Token</div></div>
+      </div>
+    </div>
+
+    <!-- intro tip -->
+    <div class="tip-box" style="margin-bottom:2rem">
+      <strong>💡 ทำไม Prompt Engineering ถึงสำคัญ?</strong><br>
+      Claude ฉลาด แต่ถ้า prompt ไม่ชัด ก็เดาสิ่งที่คุณต้องการ → ผลลัพธ์ไม่ตรง
+      การ prompt ที่ดีเหมือนการสั่งงานคนเก่ง: ชัดเจน มีบริบท มีขอบเขต
+    </div>
+
+    <!-- ────── 1. Role Assignment ────── -->
+    <div class="section-header">
+      <div class="section-icon">🎭</div>
+      <div>
+        <h2 class="section-title">Role Assignment</h2>
+        <p class="section-desc">ให้ Claude รับบทเป็น Expert ในด้านที่ต้องการ</p>
+      </div>
+    </div>
+    <div class="badge-row">
+      <span class="badge badge-beginner">Beginner</span>
+      <span class="badge badge-advanced">High Impact</span>
+    </div>
+
+    <p>การบอกให้ Claude รับ "บทบาท" ทำให้คำตอบมี depth และ context ที่ตรงกับงานมากขึ้น — เหมือนจ้าง specialist แทน generalist</p>
+
+    <div class="feature-grid" style="margin:1.5rem 0">
+      <div class="feature-card">
+        <div class="feature-icon">🏗️</div>
+        <h3>Template</h3>
+        <p>คุณคือ <em>[role]</em> ที่เชี่ยวชาญ <em>[domain]</em><br>ช่วยฉัน <em>[task]</em></p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>เหมาะกับ</h3>
+        <p>Code review, Architecture design, Security audit, Performance tuning</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📍</div>
+        <h3>วาง Role ได้ที่</h3>
+        <p>ใส่ใน CLAUDE.md (ถาวร) หรือพิมพ์ในแต่ละ session</p>
+      </div>
+    </div>
+
+    <div class="compare-grid">
+      <div class="compare-box bad-box">
+        <div class="compare-label">❌ ไม่มี Role</div>
+        <div class="code-block"><span class="c-comment"># prompt ทั่วไป</span>
+ช่วยดู code นี้ให้หน่อย
+
+<span class="c-comment"># ผลลัพธ์: คำตอบผิวเผิน</span>
+<span class="c-comment"># ไม่ได้ focus ประเด็นสำคัญ</span></div>
+      </div>
+      <div class="compare-box good-box">
+        <div class="compare-label">✅ มี Role</div>
+        <div class="code-block"><span class="c-comment"># prompt พร้อม role</span>
+คุณคือ senior TypeScript engineer
+ที่เชี่ยวชาญ Node.js และ security
+ช่วย review code นี้ โดยเน้น:
+- SQL injection risks
+- Input validation
+- Error handling patterns
+
+<span class="c-comment"># ผลลัพธ์: ลึก ครบ ตรงจุด</span></div>
+      </div>
+    </div>
+
+    <div class="pro-box">
+      <strong>🏆 Pro Tip:</strong> วาง role ใน CLAUDE.md ไม่ต้องพิมพ์ซ้ำทุก session
+      <div class="code-block" style="margin-top:0.75rem"><span class="c-comment"># CLAUDE.md</span>
+<span class="c-key">## Role</span>
+คุณคือ senior full-stack engineer ที่เชี่ยวชาญ
+React, TypeScript, Node.js และ PostgreSQL
+เน้น clean code, SOLID principles, และ security best practices</div>
+    </div>
+
+    <!-- ────── 2. Chain of Thought ────── -->
+    <div class="section-header" style="margin-top:3rem">
+      <div class="section-icon">🔗</div>
+      <div>
+        <h2 class="section-title">Chain of Thought</h2>
+        <p class="section-desc">ให้ Claude คิดก่อนทำ — วิเคราะห์ทีละขั้น</p>
+      </div>
+    </div>
+    <div class="badge-row">
+      <span class="badge badge-intermediate">Intermediate</span>
+      <span class="badge badge-advanced">Complex Tasks</span>
+    </div>
+
+    <p>แทนที่จะให้ Claude ตอบทันที บอกให้ "คิดก่อน" — ผลลัพธ์จะถูกต้องมากขึ้น โดยเฉพาะงานซับซ้อน</p>
+
+    <div class="feature-grid" style="margin:1.5rem 0">
+      <div class="feature-card">
+        <div class="feature-icon">🧠</div>
+        <h3>เหมาะกับ</h3>
+        <p>Complex architecture, Debugging tricky bugs, Refactoring decisions, Security analysis</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>คู่กับ Plan Mode</h3>
+        <p>ใช้ Shift+Tab เปิด Plan Mode + Chain of Thought = ผลลัพธ์ดีที่สุด</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔑</div>
+        <h3>คำสำคัญ</h3>
+        <p>"วิเคราะห์ก่อน", "คิดทีละขั้น", "ข้อดี-ข้อเสีย", "เหตุผล"</p>
+      </div>
+    </div>
+
+    <div class="compare-grid">
+      <div class="compare-box bad-box">
+        <div class="compare-label">❌ ไม่ใช้ CoT</div>
+        <div class="code-block">migrate database schema จาก
+MongoDB ไป PostgreSQL ให้หน่อย
+
+<span class="c-comment"># Claude เดาแล้วลุย</span>
+<span class="c-comment"># อาจพลาด edge cases สำคัญ</span></div>
+      </div>
+      <div class="compare-box good-box">
+        <div class="compare-label">✅ ใช้ Chain of Thought</div>
+        <div class="code-block">ก่อน migrate ขอให้:
+1. วิเคราะห์ schema ปัจจุบัน
+2. ระบุ data types ที่ต้องแปลง
+3. หา relationships ที่ซับซ้อน
+4. ชี้ risks และ data loss risks
+5. เสนอ migration strategy
+
+แล้วค่อย implement migration script</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <strong>💡 Trigger phrases สำหรับ Chain of Thought:</strong><br>
+      "คิดทีละขั้น", "วิเคราะห์ก่อน implement", "อธิบาย reasoning", "pros and cons ก่อน", "step by step"
+    </div>
+
+    <!-- ────── 3. Few-shot Prompting ────── -->
+    <div class="section-header" style="margin-top:3rem">
+      <div class="section-icon">🎯</div>
+      <div>
+        <h2 class="section-title">Few-shot Prompting</h2>
+        <p class="section-desc">ให้ตัวอย่าง 2-3 อัน แล้วค่อยถามงานจริง</p>
+      </div>
+    </div>
+    <div class="badge-row">
+      <span class="badge badge-intermediate">Intermediate</span>
+      <span class="badge badge-advanced">Style Matching</span>
+    </div>
+
+    <p>Claude เรียนรู้ pattern จากตัวอย่างที่คุณให้ได้ในทันที ใช้เพื่อบังคับ code style, naming convention, หรือ output format ที่ต้องการ</p>
+
+    <div class="feature-grid" style="margin:1.5rem 0">
+      <div class="feature-card">
+        <div class="feature-icon">🧪</div>
+        <h3>เหมาะกับ</h3>
+        <p>เขียน tests, สร้าง boilerplate, naming conventions, commit message style</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📏</div>
+        <h3>จำนวนตัวอย่าง</h3>
+        <p>2-3 ตัวอย่างเพียงพอ — มากเกินไปเปลือง token ไม่ได้ผลดีขึ้น</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎨</div>
+        <h3>ผลลัพธ์</h3>
+        <p>Output ที่ match style โปรเจคปัจจุบัน ไม่ต้อง edit เพิ่ม</p>
+      </div>
+    </div>
+
+    <div class="compare-grid">
+      <div class="compare-box bad-box">
+        <div class="compare-label">❌ ไม่มีตัวอย่าง</div>
+        <div class="code-block">เขียน unit test สำหรับ
+UserService.createUser()</div>
+      </div>
+      <div class="compare-box good-box">
+        <div class="compare-label">✅ Few-shot</div>
+        <div class="code-block"><span class="c-comment"># Test patterns ในโปรเจคนี้:</span>
+
+<span class="c-key">describe</span>(<span class="c-str">'OrderService'</span>, () => {
+  <span class="c-key">it</span>(<span class="c-str">'should throw if stock < 0'</span>, <span class="c-key">async</span> () => {
+    <span class="c-key">await</span> expect(svc.create({qty:-1}))
+      .rejects.toThrow(<span class="c-str">'INVALID_STOCK'</span>)
+  })
+})
+
+<span class="c-comment"># ตอนนี้เขียน test สำหรับ</span>
+<span class="c-comment"># UserService.createUser() ในรูปแบบเดียวกัน</span></div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <strong>ℹ️ Few-shot ใน CLAUDE.md:</strong>
+      วาง example patterns ใน CLAUDE.md ได้เลย จะ apply กับทุก session โดยอัตโนมัติ
+    </div>
+
+    <!-- ────── 4. Constraint Prompting ────── -->
+    <div class="section-header" style="margin-top:3rem">
+      <div class="section-icon">📐</div>
+      <div>
+        <h2 class="section-title">Constraint Prompting</h2>
+        <p class="section-desc">ระบุขอบเขตชัดเจน — ห้ามทำ / ต้องทำ / ขนาดที่ต้องการ</p>
+      </div>
+    </div>
+    <div class="badge-row">
+      <span class="badge badge-beginner">Beginner</span>
+      <span class="badge badge-advanced">ลด Error 40%+</span>
+    </div>
+
+    <p>Prompt ที่ไม่มีขอบเขตทำให้ Claude ตัดสินใจเองในสิ่งที่อาจไม่ต้องการ การระบุ constraint ชัดเจนช่วยลด unexpected changes</p>
+
+    <div class="feature-grid" style="margin:1.5rem 0">
+      <div class="feature-card">
+        <div class="feature-icon">🚫</div>
+        <h3>ห้ามทำ</h3>
+        <p>ห้ามเปลี่ยน interface, ห้าม refactor ส่วนอื่น, ห้ามเพิ่ม dependency ใหม่</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">✅</div>
+        <h3>ต้องทำ</h3>
+        <p>ต้องผ่าน existing tests, ต้องใช้ TypeScript strict mode, ต้อง backward compatible</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📏</div>
+        <h3>ขนาด / Scope</h3>
+        <p>แก้เฉพาะ function นี้, ไม่เกิน 50 lines, อธิบายสั้นไม่เกิน 3 bullets</p>
+      </div>
+    </div>
+
+    <div class="compare-grid">
+      <div class="compare-box bad-box">
+        <div class="compare-label">❌ ไม่มี Constraint</div>
+        <div class="code-block">ช่วย optimize ฟังก์ชัน getUserById()
+
+<span class="c-comment"># Claude อาจ:</span>
+<span class="c-comment"># - เปลี่ยน function signature</span>
+<span class="c-comment"># - Refactor ทั้ง file</span>
+<span class="c-comment"># - เพิ่ม library ใหม่</span></div>
+      </div>
+      <div class="compare-box good-box">
+        <div class="compare-label">✅ มี Constraint</div>
+        <div class="code-block">ช่วย optimize getUserById():
+✅ แก้เฉพาะ function นี้เท่านั้น
+✅ ต้องผ่าน existing unit tests
+✅ ต้อง type-safe (TypeScript strict)
+🚫 ห้ามเปลี่ยน function signature
+🚫 ห้ามเพิ่ม external dependencies
+
+<span class="c-comment"># ผลลัพธ์: targeted, safe, predictable</span></div>
+      </div>
+    </div>
+
+    <div class="warn-box">
+      <strong>⚠️ Claude ใจดีเกินไป:</strong>
+      Claude มักพยายาม "ช่วยเพิ่ม" โดยไม่ได้ถูกขอ — ระบุ constraint ป้องกันการแตะ code ที่ไม่ต้องการ
+    </div>
+
+    <!-- ────── 5. Iterative Prompting ────── -->
+    <div class="section-header" style="margin-top:3rem">
+      <div class="section-icon">🔄</div>
+      <div>
+        <h2 class="section-title">Iterative Prompting</h2>
+        <p class="section-desc">พัฒนาทีละรอบ — draft แล้วค่อยๆ refine</p>
+      </div>
+    </div>
+    <div class="badge-row">
+      <span class="badge badge-intermediate">Intermediate</span>
+      <span class="badge badge-advanced">ประหยัด Token</span>
+    </div>
+
+    <p>แทนที่จะใส่ทุกอย่างใน prompt เดียว ให้เริ่มจาก draft แล้ว iterate — แต่ละรอบ refine ทีละ concern</p>
+
+    <div class="feature-grid" style="margin:1.5rem 0">
+      <div class="feature-card">
+        <div class="feature-icon">📝</div>
+        <h3>Step 1: Draft</h3>
+        <p>"ช่วยเขียน REST API สำหรับ user authentication"</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔧</div>
+        <h3>Step 2: Refine</h3>
+        <p>"ดีมาก ตอนนี้เพิ่ม rate limiting และ JWT refresh token"</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">✨</div>
+        <h3>Step 3: Polish</h3>
+        <p>"เพิ่ม error handling ให้ครบ และ JSDoc comments"</p>
+      </div>
+    </div>
+
+    <div class="compare-grid">
+      <div class="compare-box bad-box">
+        <div class="compare-label">❌ Mega Prompt</div>
+        <div class="code-block">เขียน REST API ที่มี authentication,
+authorization, rate limiting, JWT,
+refresh token, error handling, logging,
+validation, unit tests, JSDoc, และ
+OpenAPI spec ทั้งหมดในครั้งเดียว
+
+<span class="c-comment"># ใช้ token สูงมาก</span>
+<span class="c-comment"># ผลลัพธ์ไม่ครบทุกส่วน</span>
+<span class="c-comment"># แก้ยากถ้ามีส่วนผิด</span></div>
+      </div>
+      <div class="compare-box good-box">
+        <div class="compare-label">✅ Iterative</div>
+        <div class="code-block"><span class="c-comment"># รอบ 1: Core structure</span>
+เขียน Express router สำหรับ auth API
+
+<span class="c-comment"># รอบ 2: Security</span>
+เพิ่ม JWT + rate limiting
+
+<span class="c-comment"># รอบ 3: Robustness</span>
+เพิ่ม error handling + validation
+
+<span class="c-comment"># รอบ 4: Docs</span>
+เพิ่ม JSDoc + OpenAPI spec</div>
+      </div>
+    </div>
+
+    <div class="pro-box">
+      <strong>🏆 Iterative = ประหยัด Token:</strong>
+      การ re-prompt ใหม่ทั้งหมดทุกครั้งเปลือง token และ context
+      การ iterate จาก draft ที่มีอยู่แล้วประหยัดกว่า 30-40%
+    </div>
+
+    <!-- ────── 6. Context Loading ────── -->
+    <div class="section-header" style="margin-top:3rem">
+      <div class="section-icon">🏗️</div>
+      <div>
+        <h2 class="section-title">Context Loading</h2>
+        <p class="section-desc">โหลด Context อย่างมีประสิทธิภาพ — บอก file ตรงๆ</p>
+      </div>
+    </div>
+    <div class="badge-row">
+      <span class="badge badge-intermediate">Intermediate</span>
+      <span class="badge badge-advanced">ประหยัด Token 30-50%</span>
+    </div>
+
+    <p>แทนที่จะปล่อยให้ Claude สำรวจ codebase เอง ให้บอก file ที่ต้องอ่านตรงๆ — เร็วกว่า แม่นกว่า ประหยัดกว่า</p>
+
+    <div class="feature-grid" style="margin:1.5rem 0">
+      <div class="feature-card">
+        <div class="feature-icon">📁</div>
+        <h3>ระบุ Files</h3>
+        <p>บอกชื่อ file ที่เกี่ยวข้องโดยตรง ไม่ต้องให้ Claude ค้นหาเอง</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🗺️</div>
+        <h3>ระบุ Context</h3>
+        <p>อธิบาย architecture สั้นๆ ก่อน เช่น "ใช้ repository pattern + DI"</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>ใช้ .claudeignore</h3>
+        <p>ตัด files ที่ไม่เกี่ยวออก node_modules, dist, logs ไม่ต้องให้ Claude อ่าน</p>
+      </div>
+    </div>
+
+    <div class="compare-grid">
+      <div class="compare-box bad-box">
+        <div class="compare-label">❌ ปล่อยให้ Claude สำรวจ</div>
+        <div class="code-block">ช่วย fix bug ใน authentication
+
+<span class="c-comment"># Claude ต้องสำรวจ codebase</span>
+<span class="c-comment"># อ่าน file ที่ไม่เกี่ยวหลาย file</span>
+<span class="c-comment"># เสีย token สูง</span>
+<span class="c-comment"># อาจเข้าใจ context ผิด</span></div>
+      </div>
+      <div class="compare-box good-box">
+        <div class="compare-label">✅ ระบุ Context ชัดเจน</div>
+        <div class="code-block">อ่าน files เหล่านี้ก่อน:
+- src/auth/middleware.ts (JWT verify)
+- src/auth/service.ts (business logic)
+- src/types/user.ts (User interface)
+- src/config/auth.config.ts (settings)
+
+Context: ใช้ Express + Passport.js
+Bug: JWT token ไม่ expire ตาม config
+
+ช่วย fix และ explain root cause</div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <strong>ℹ️ วิธีระบุ files ให้ Claude อ่าน:</strong>
+      พิมพ์ path ตรงๆ ใน chat — Claude จะ read file นั้นก่อน หรือใส่ file path ใน CLAUDE.md
+      เพื่อให้ Claude รู้ว่า architecture ใช้ files ไหนเป็นหลัก
+    </div>
+
+    <!-- ────── Summary Table ────── -->
+    <div class="section-header" style="margin-top:3rem">
+      <div class="section-icon">📊</div>
+      <div>
+        <h2 class="section-title">สรุป: เทคนิคไหนใช้เมื่อไหร่</h2>
+        <p class="section-desc">เลือกให้ถูก situation → ผลลัพธ์ดีที่สุด</p>
+      </div>
+    </div>
+
+    <div style="overflow-x:auto;margin:1.5rem 0">
+      <table class="ref-table">
+        <thead>
+          <tr>
+            <th>เทคนิค</th>
+            <th>เหมาะกับ</th>
+            <th>ผลลัพธ์</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>🎭 Role Assignment</strong></td>
+            <td>Code review, Architecture, Security audit</td>
+            <td>คำตอบ expert-level มี depth มากขึ้น</td>
+          </tr>
+          <tr>
+            <td><strong>🔗 Chain of Thought</strong></td>
+            <td>Complex bugs, Major refactoring, Architecture decisions</td>
+            <td>ลด errors จากการ "ลุย" ไม่คิด</td>
+          </tr>
+          <tr>
+            <td><strong>🎯 Few-shot</strong></td>
+            <td>Unit tests, Naming conventions, Commit messages</td>
+            <td>Output ตรง style โปรเจคทันที</td>
+          </tr>
+          <tr>
+            <td><strong>📐 Constraint</strong></td>
+            <td>Hotfixes, Targeted patches, Production code</td>
+            <td>ลด unexpected changes 40%+</td>
+          </tr>
+          <tr>
+            <td><strong>🔄 Iterative</strong></td>
+            <td>Feature development, API design, Large tasks</td>
+            <td>ประหยัด token, คุมทิศทางได้ดีกว่า</td>
+          </tr>
+          <tr>
+            <td><strong>🏗️ Context Loading</strong></td>
+            <td>Bug fix, Feature add, Code understand</td>
+            <td>ประหยัด token 30-50%, แม่นขึ้น</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pro-box">
+      <strong>🏆 Combo ที่ดีที่สุด:</strong>
+      Role Assignment + Chain of Thought + Constraint Prompting = คำตอบ expert-level ที่ targeted และ predictable
+      <div class="code-block" style="margin-top:0.75rem"><span class="c-comment"># Super Prompt Template</span>
+คุณคือ senior [role] (Role)
+
+ก่อน implement ขอให้วิเคราะห์: (Chain of Thought)
+1. ปัญหาหลักคืออะไร
+2. approaches ที่เป็นไปได้
+3. tradeoffs ของแต่ละ approach
+
+Constraints: (Constraint)
+✅ ต้องผ่าน existing tests
+🚫 ห้ามเปลี่ยน public interface
+
+Task: [งานที่ต้องการ]</div>
+    </div>
+
+    <!-- nav arrows -->
+    <div class="nav-arrows">
+      <button class="nav-arrow" onclick="show('s8')">← Quick Reference</button>
+      <button class="nav-arrow" onclick="show('s1')">เริ่มต้นใหม่ →</button>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════ s9 ═══ -->
+  <section class="content-section" id="s9">
+    <div class="hero" style="background:linear-gradient(135deg,#7c3aed 0%,#db2777 50%,#ea580c 100%)">
+      <div class="hero-badge">🧩 Prompt Engineering</div>
+      <h1 class="hero-title">เทคนิค Prompt สำหรับ Coding</h1>
+      <p class="hero-sub">6 เทคนิคที่ทำให้ Claude เข้าใจงานได้ดีขึ้น ตอบได้แม่นยำขึ้น และประหยัด Token</p>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-num">6</div><div class="stat-label">เทคนิคหลัก</div></div>
+        <div class="stat"><div class="stat-num">40%+</div><div class="stat-label">ลด Error</div></div>
+        <div class="stat"><div class="stat-num">50%</div><div class="stat-label">ประหยัด Token</div></div>
+      </div>
+    </div>
+
+    <!-- intro tip -->
+    <div class="tip-box" style="margin-bottom:2rem">
+      <strong>💡 ทำไม Prompt Engineering ถึงสำคัญ?</strong><br>
+      Claude ฉลาด แต่ถ้า prompt ไม่ชัด ก็เดาสิ่งที่คุณต้องการ → ผลลัพธ์ไม่ตรง
+      การ prompt ที่ดีเหมือนการสั่งงานคนเก่ง: ชัดเจน มีบริบท มีขอบเขต
+    </div>
+
+    <!-- ────── 1. Role Assignment ────── -->
+    <div class="section-header">
+      <div class="section-icon">🎭</div>
+      <div>
+        <h2 class="section-title">Role Assignment</h2>
+        <p class="section-desc">ให้ Claude รับบทเป็น Expert ในด้านที่ต้องการ</p>
+      </div>
+    </div>
+    <div class="badge-row">
+      <span class="badge badge-beginner">Beginner</span>
+      <span class="badge badge-advanced">High Impact</span>
+    </div>
+
+    <p>การบอกให้ Claude รับ "บทบาท" ทำให้คำตอบมี depth และ context ที่ตรงกับงานมากขึ้น — เหมือนจ้าง specialist แทน generalist</p>
+
+    <div class="feature-grid" style="margin:1.5rem 0">
+      <div class="feature-card">
+        <div class="feature-icon">🏗️</div>
+        <h3>Template</h3>
+        <p>คุณคือ <em>[role]</em> ที่เชี่ยวชาญ <em>[domain]</em><br>ช่วยฉัน <em>[task]</em></p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>เหมาะกับ</h3>
+        <p>Code review, Architecture design, Security audit, Performance tuning</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📍</div>
+        <h3>วาง Role ได้ที่</h3>
+        <p>ใส่ใน CLAUDE.md (ถาวร) หรือพิมพ์ในแต่ละ session</p>
+      </div>
+    </div>
+
+    <div class="compare-grid">
+      <div class="compare-box bad-box">
+        <div class="compare-label">❌ ไม่มี Role</div>
+        <div class="code-block"><span class="c-comment"># prompt ทั่วไป</span>
+ช่วยดู code นี้ให้หน่อย
+
+<span class="c-comment"># ผลลัพธ์: คำตอบผิวเผิน</span>
+<span class="c-comment"># ไม่ได้ focus ประเด็นสำคัญ</span></div>
+      </div>
+      <div class="compare-box good-box">
+        <div class="compare-label">✅ มี Role</div>
+        <div class="code-block"><span class="c-comment"># prompt พร้อม role</span>
+คุณคือ senior TypeScript engineer
+ที่เชี่ยวชาญ Node.js และ security
+ช่วย review code นี้ โดยเน้น:
+- SQL injection risks
+- Input validation
+- Error handling patterns
+
+<span class="c-comment"># ผลลัพธ์: ลึก ครบ ตรงจุด</span></div>
+      </div>
+    </div>
+
+    <div class="pro-box">
+      <strong>🏆 Pro Tip:</strong> วาง role ใน CLAUDE.md ไม่ต้องพิมพ์ซ้ำทุก session
+      <div class="code-block" style="margin-top:0.75rem"><span class="c-comment"># CLAUDE.md</span>
+<span class="c-key">## Role</span>
+คุณคือ senior full-stack engineer ที่เชี่ยวชาญ
+React, TypeScript, Node.js และ PostgreSQL
+เน้น clean code, SOLID principles, และ security best practices</div>
+    </div>
+
+    <!-- ────── 2. Chain of Thought ────── -->
+    <div class="section-header" style="margin-top:3rem">
+      <div class="section-icon">🔗</div>
+      <div>
+        <h2 class="section-title">Chain of Thought</h2>
+        <p class="section-desc">ให้ Claude คิดก่อนทำ — วิเคราะห์ทีละขั้น</p>
+      </div>
+    </div>
+    <div class="badge-row">
+      <span class="badge badge-intermediate">Intermediate</span>
+      <span class="badge badge-advanced">Complex Tasks</span>
+    </div>
+
+    <p>แทนที่จะให้ Claude ตอบทันที บอกให้ "คิดก่อน" — ผลลัพธ์จะถูกต้องมากขึ้น โดยเฉพาะงานซับซ้อน</p>
+
+    <div class="feature-grid" style="margin:1.5rem 0">
+      <div class="feature-card">
+        <div class="feature-icon">🧠</div>
+        <h3>เหมาะกับ</h3>
+        <p>Complex architecture, Debugging tricky bugs, Refactoring decisions, Security analysis</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>คู่กับ Plan Mode</h3>
+        <p>ใช้ Shift+Tab เปิด Plan Mode + Chain of Thought = ผลลัพธ์ดีที่สุด</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔑</div>
+        <h3>คำสำคัญ</h3>
+        <p>"วิเคราะห์ก่อน", "คิดทีละขั้น", "ข้อดี-ข้อเสีย", "เหตุผล"</p>
+      </div>
+    </div>
+
+    <div class="compare-grid">
+      <div class="compare-box bad-box">
+        <div class="compare-label">❌ ไม่ใช้ CoT</div>
+        <div class="code-block">migrate database schema จาก
+MongoDB ไป PostgreSQL ให้หน่อย
+
+<span class="c-comment"># Claude เดาแล้วลุย</span>
+<span class="c-comment"># อาจพลาด edge cases สำคัญ</span></div>
+      </div>
+      <div class="compare-box good-box">
+        <div class="compare-label">✅ ใช้ Chain of Thought</div>
+        <div class="code-block">ก่อน migrate ขอให้:
+1. วิเคราะห์ schema ปัจจุบัน
+2. ระบุ data types ที่ต้องแปลง
+3. หา relationships ที่ซับซ้อน
+4. ชี้ risks และ data loss risks
+5. เสนอ migration strategy
+
+แล้วค่อย implement migration script</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <strong>💡 Trigger phrases สำหรับ Chain of Thought:</strong><br>
+      "คิดทีละขั้น", "วิเคราะห์ก่อน implement", "อธิบาย reasoning", "pros and cons ก่อน", "step by step"
+    </div>
+
+    <!-- ────── 3. Few-shot Prompting ────── -->
+    <div class="section-header" style="margin-top:3rem">
+      <div class="section-icon">🎯</div>
+      <div>
+        <h2 class="section-title">Few-shot Prompting</h2>
+        <p class="section-desc">ให้ตัวอย่าง 2-3 อัน แล้วค่อยถามงานจริง</p>
+      </div>
+    </div>
+    <div class="badge-row">
+      <span class="badge badge-intermediate">Intermediate</span>
+      <span class="badge badge-advanced">Style Matching</span>
+    </div>
+
+    <p>Claude เรียนรู้ pattern จากตัวอย่างที่คุณให้ได้ในทันที ใช้เพื่อบังคับ code style, naming convention, หรือ output format ที่ต้องการ</p>
+
+    <div class="feature-grid" style="margin:1.5rem 0">
+      <div class="feature-card">
+        <div class="feature-icon">🧪</div>
+        <h3>เหมาะกับ</h3>
+        <p>เขียน tests, สร้าง boilerplate, naming conventions, commit message style</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📏</div>
+        <h3>จำนวนตัวอย่าง</h3>
+        <p>2-3 ตัวอย่างเพียงพอ — มากเกินไปเปลือง token ไม่ได้ผลดีขึ้น</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎨</div>
+        <h3>ผลลัพธ์</h3>
+        <p>Output ที่ match style โปรเจคปัจจุบัน ไม่ต้อง edit เพิ่ม</p>
+      </div>
+    </div>
+
+    <div class="compare-grid">
+      <div class="compare-box bad-box">
+        <div class="compare-label">❌ ไม่มีตัวอย่าง</div>
+        <div class="code-block">เขียน unit test สำหรับ
+UserService.createUser()</div>
+      </div>
+      <div class="compare-box good-box">
+        <div class="compare-label">✅ Few-shot</div>
+        <div class="code-block"><span class="c-comment"># Test patterns ในโปรเจคนี้:</span>
+
+<span class="c-key">describe</span>(<span class="c-str">'OrderService'</span>, () => {
+  <span class="c-key">it</span>(<span class="c-str">'should throw if stock < 0'</span>, <span class="c-key">async</span> () => {
+    <span class="c-key">await</span> expect(svc.create({qty:-1}))
+      .rejects.toThrow(<span class="c-str">'INVALID_STOCK'</span>)
+  })
+})
+
+<span class="c-comment"># ตอนนี้เขียน test สำหรับ</span>
+<span class="c-comment"># UserService.createUser() ในรูปแบบเดียวกัน</span></div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <strong>ℹ️ Few-shot ใน CLAUDE.md:</strong>
+      วาง example patterns ใน CLAUDE.md ได้เลย จะ apply กับทุก session โดยอัตโนมัติ
+    </div>
+
+    <!-- ────── 4. Constraint Prompting ────── -->
+    <div class="section-header" style="margin-top:3rem">
+      <div class="section-icon">📐</div>
+      <div>
+        <h2 class="section-title">Constraint Prompting</h2>
+        <p class="section-desc">ระบุขอบเขตชัดเจน — ห้ามทำ / ต้องทำ / ขนาดที่ต้องการ</p>
+      </div>
+    </div>
+    <div class="badge-row">
+      <span class="badge badge-beginner">Beginner</span>
+      <span class="badge badge-advanced">ลด Error 40%+</span>
+    </div>
+
+    <p>Prompt ที่ไม่มีขอบเขตทำให้ Claude ตัดสินใจเองในสิ่งที่อาจไม่ต้องการ การระบุ constraint ชัดเจนช่วยลด unexpected changes</p>
+
+    <div class="feature-grid" style="margin:1.5rem 0">
+      <div class="feature-card">
+        <div class="feature-icon">🚫</div>
+        <h3>ห้ามทำ</h3>
+        <p>ห้ามเปลี่ยน interface, ห้าม refactor ส่วนอื่น, ห้ามเพิ่ม dependency ใหม่</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">✅</div>
+        <h3>ต้องทำ</h3>
+        <p>ต้องผ่าน existing tests, ต้องใช้ TypeScript strict mode, ต้อง backward compatible</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📏</div>
+        <h3>ขนาด / Scope</h3>
+        <p>แก้เฉพาะ function นี้, ไม่เกิน 50 lines, อธิบายสั้นไม่เกิน 3 bullets</p>
+      </div>
+    </div>
+
+    <div class="compare-grid">
+      <div class="compare-box bad-box">
+        <div class="compare-label">❌ ไม่มี Constraint</div>
+        <div class="code-block">ช่วย optimize ฟังก์ชัน getUserById()
+
+<span class="c-comment"># Claude อาจ:</span>
+<span class="c-comment"># - เปลี่ยน function signature</span>
+<span class="c-comment"># - Refactor ทั้ง file</span>
+<span class="c-comment"># - เพิ่ม library ใหม่</span></div>
+      </div>
+      <div class="compare-box good-box">
+        <div class="compare-label">✅ มี Constraint</div>
+        <div class="code-block">ช่วย optimize getUserById():
+✅ แก้เฉพาะ function นี้เท่านั้น
+✅ ต้องผ่าน existing unit tests
+✅ ต้อง type-safe (TypeScript strict)
+🚫 ห้ามเปลี่ยน function signature
+🚫 ห้ามเพิ่ม external dependencies
+
+<span class="c-comment"># ผลลัพธ์: targeted, safe, predictable</span></div>
+      </div>
+    </div>
+
+    <div class="warn-box">
+      <strong>⚠️ Claude ใจดีเกินไป:</strong>
+      Claude มักพยายาม "ช่วยเพิ่ม" โดยไม่ได้ถูกขอ — ระบุ constraint ป้องกันการแตะ code ที่ไม่ต้องการ
+    </div>
+
+    <!-- ────── 5. Iterative Prompting ────── -->
+    <div class="section-header" style="margin-top:3rem">
+      <div class="section-icon">🔄</div>
+      <div>
+        <h2 class="section-title">Iterative Prompting</h2>
+        <p class="section-desc">พัฒนาทีละรอบ — draft แล้วค่อยๆ refine</p>
+      </div>
+    </div>
+    <div class="badge-row">
+      <span class="badge badge-intermediate">Intermediate</span>
+      <span class="badge badge-advanced">ประหยัด Token</span>
+    </div>
+
+    <p>แทนที่จะใส่ทุกอย่างใน prompt เดียว ให้เริ่มจาก draft แล้ว iterate — แต่ละรอบ refine ทีละ concern</p>
+
+    <div class="feature-grid" style="margin:1.5rem 0">
+      <div class="feature-card">
+        <div class="feature-icon">📝</div>
+        <h3>Step 1: Draft</h3>
+        <p>"ช่วยเขียน REST API สำหรับ user authentication"</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔧</div>
+        <h3>Step 2: Refine</h3>
+        <p>"ดีมาก ตอนนี้เพิ่ม rate limiting และ JWT refresh token"</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">✨</div>
+        <h3>Step 3: Polish</h3>
+        <p>"เพิ่ม error handling ให้ครบ และ JSDoc comments"</p>
+      </div>
+    </div>
+
+    <div class="compare-grid">
+      <div class="compare-box bad-box">
+        <div class="compare-label">❌ Mega Prompt</div>
+        <div class="code-block">เขียน REST API ที่มี authentication,
+authorization, rate limiting, JWT,
+refresh token, error handling, logging,
+validation, unit tests, JSDoc, และ
+OpenAPI spec ทั้งหมดในครั้งเดียว
+
+<span class="c-comment"># ใช้ token สูงมาก</span>
+<span class="c-comment"># ผลลัพธ์ไม่ครบทุกส่วน</span>
+<span class="c-comment"># แก้ยากถ้ามีส่วนผิด</span></div>
+      </div>
+      <div class="compare-box good-box">
+        <div class="compare-label">✅ Iterative</div>
+        <div class="code-block"><span class="c-comment"># รอบ 1: Core structure</span>
+เขียน Express router สำหรับ auth API
+
+<span class="c-comment"># รอบ 2: Security</span>
+เพิ่ม JWT + rate limiting
+
+<span class="c-comment"># รอบ 3: Robustness</span>
+เพิ่ม error handling + validation
+
+<span class="c-comment"># รอบ 4: Docs</span>
+เพิ่ม JSDoc + OpenAPI spec</div>
+      </div>
+    </div>
+
+    <div class="pro-box">
+      <strong>🏆 Iterative = ประหยัด Token:</strong>
+      การ re-prompt ใหม่ทั้งหมดทุกครั้งเปลือง token และ context
+      การ iterate จาก draft ที่มีอยู่แล้วประหยัดกว่า 30-40%
+    </div>
+
+    <!-- ────── 6. Context Loading ────── -->
+    <div class="section-header" style="margin-top:3rem">
+      <div class="section-icon">🏗️</div>
+      <div>
+        <h2 class="section-title">Context Loading</h2>
+        <p class="section-desc">โหลด Context อย่างมีประสิทธิภาพ — บอก file ตรงๆ</p>
+      </div>
+    </div>
+    <div class="badge-row">
+      <span class="badge badge-intermediate">Intermediate</span>
+      <span class="badge badge-advanced">ประหยัด Token 30-50%</span>
+    </div>
+
+    <p>แทนที่จะปล่อยให้ Claude สำรวจ codebase เอง ให้บอก file ที่ต้องอ่านตรงๆ — เร็วกว่า แม่นกว่า ประหยัดกว่า</p>
+
+    <div class="feature-grid" style="margin:1.5rem 0">
+      <div class="feature-card">
+        <div class="feature-icon">📁</div>
+        <h3>ระบุ Files</h3>
+        <p>บอกชื่อ file ที่เกี่ยวข้องโดยตรง ไม่ต้องให้ Claude ค้นหาเอง</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🗺️</div>
+        <h3>ระบุ Context</h3>
+        <p>อธิบาย architecture สั้นๆ ก่อน เช่น "ใช้ repository pattern + DI"</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>ใช้ .claudeignore</h3>
+        <p>ตัด files ที่ไม่เกี่ยวออก node_modules, dist, logs ไม่ต้องให้ Claude อ่าน</p>
+      </div>
+    </div>
+
+    <div class="compare-grid">
+      <div class="compare-box bad-box">
+        <div class="compare-label">❌ ปล่อยให้ Claude สำรวจ</div>
+        <div class="code-block">ช่วย fix bug ใน authentication
+
+<span class="c-comment"># Claude ต้องสำรวจ codebase</span>
+<span class="c-comment"># อ่าน file ที่ไม่เกี่ยวหลาย file</span>
+<span class="c-comment"># เสีย token สูง</span>
+<span class="c-comment"># อาจเข้าใจ context ผิด</span></div>
+      </div>
+      <div class="compare-box good-box">
+        <div class="compare-label">✅ ระบุ Context ชัดเจน</div>
+        <div class="code-block">อ่าน files เหล่านี้ก่อน:
+- src/auth/middleware.ts (JWT verify)
+- src/auth/service.ts (business logic)
+- src/types/user.ts (User interface)
+- src/config/auth.config.ts (settings)
+
+Context: ใช้ Express + Passport.js
+Bug: JWT token ไม่ expire ตาม config
+
+ช่วย fix และ explain root cause</div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <strong>ℹ️ วิธีระบุ files ให้ Claude อ่าน:</strong>
+      พิมพ์ path ตรงๆ ใน chat — Claude จะ read file นั้นก่อน หรือใส่ file path ใน CLAUDE.md
+      เพื่อให้ Claude รู้ว่า architecture ใช้ files ไหนเป็นหลัก
+    </div>
+
+    <!-- ────── Summary Table ────── -->
+    <div class="section-header" style="margin-top:3rem">
+      <div class="section-icon">📊</div>
+      <div>
+        <h2 class="section-title">สรุป: เทคนิคไหนใช้เมื่อไหร่</h2>
+        <p class="section-desc">เลือกให้ถูก situation → ผลลัพธ์ดีที่สุด</p>
+      </div>
+    </div>
+
+    <div style="overflow-x:auto;margin:1.5rem 0">
+      <table class="ref-table">
+        <thead>
+          <tr>
+            <th>เทคนิค</th>
+            <th>เหมาะกับ</th>
+            <th>ผลลัพธ์</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>🎭 Role Assignment</strong></td>
+            <td>Code review, Architecture, Security audit</td>
+            <td>คำตอบ expert-level มี depth มากขึ้น</td>
+          </tr>
+          <tr>
+            <td><strong>🔗 Chain of Thought</strong></td>
+            <td>Complex bugs, Major refactoring, Architecture decisions</td>
+            <td>ลด errors จากการ "ลุย" ไม่คิด</td>
+          </tr>
+          <tr>
+            <td><strong>🎯 Few-shot</strong></td>
+            <td>Unit tests, Naming conventions, Commit messages</td>
+            <td>Output ตรง style โปรเจคทันที</td>
+          </tr>
+          <tr>
+            <td><strong>📐 Constraint</strong></td>
+            <td>Hotfixes, Targeted patches, Production code</td>
+            <td>ลด unexpected changes 40%+</td>
+          </tr>
+          <tr>
+            <td><strong>🔄 Iterative</strong></td>
+            <td>Feature development, API design, Large tasks</td>
+            <td>ประหยัด token, คุมทิศทางได้ดีกว่า</td>
+          </tr>
+          <tr>
+            <td><strong>🏗️ Context Loading</strong></td>
+            <td>Bug fix, Feature add, Code understand</td>
+            <td>ประหยัด token 30-50%, แม่นขึ้น</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pro-box">
+      <strong>🏆 Combo ที่ดีที่สุด:</strong>
+      Role Assignment + Chain of Thought + Constraint Prompting = คำตอบ expert-level ที่ targeted และ predictable
+      <div class="code-block" style="margin-top:0.75rem"><span class="c-comment"># Super Prompt Template</span>
+คุณคือ senior [role] (Role)
+
+ก่อน implement ขอให้วิเคราะห์: (Chain of Thought)
+1. ปัญหาหลักคืออะไร
+2. approaches ที่เป็นไปได้
+3. tradeoffs ของแต่ละ approach
+
+Constraints: (Constraint)
+✅ ต้องผ่าน existing tests
+🚫 ห้ามเปลี่ยน public interface
+
+Task: [งานที่ต้องการ]</div>
+    </div>
+
+    <!-- nav arrows -->
+    <div class="nav-arrows">
+      <button class="nav-arrow" onclick="show('s8')">← Quick Reference</button>
+      <button class="nav-arrow" onclick="show('s1')">เริ่มต้นใหม่ →</button>
+    </div>
+  </section>
+
+</main>
+<script>
+const sections = ['s1','s2','s3','s4','s5','s6','s7','s8','s9'];
+
+// ── NAVIGATION ──────────────────────────────────────────────────────────────
+function show(id) {
+  sections.forEach(s => {
+    const el = document.getElementById(s);
+    if (el) el.classList.remove('active');
+  });
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const target = document.getElementById(id);
+  if (target) target.classList.add('active');
+  const idx = sections.indexOf(id);
+  const items = document.querySelectorAll('.nav-item');
+  if (items[idx]) items[idx].classList.add('active');
+  window.scrollTo(0, 0);
+  // Deep link
+  try { history.replaceState(null, '', '#' + id); } catch(e) {}
+}
+
+// Deep link on load
+(function() {
+  const hash = window.location.hash.slice(1);
+  if (hash && sections.includes(hash)) show(hash);
+})();
+
+// Keyboard navigation
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
+  const active = document.querySelector('.content-section.active');
+  const idx = sections.indexOf(active && active.id);
+  if (e.key === 'ArrowRight' && idx < sections.length - 1) show(sections[idx + 1]);
+  if (e.key === 'ArrowLeft' && idx > 0) show(sections[idx - 1]);
+});
+
+// ── COPY BUTTON ─────────────────────────────────────────────────────────────
+document.querySelectorAll('.code-block').forEach(block => {
+  // skip ถ้ามี label อยู่แล้ว (เลื่อนปุ่มหน่อย)
+  const hasLabel = block.querySelector('.label');
+  const btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'Copy';
+  if (hasLabel) btn.style.top = '30px';
+  btn.addEventListener('click', () => {
+    // ดึง text โดยไม่เอา label และ copy button
+    const clone = block.cloneNode(true);
+    clone.querySelectorAll('.label, .copy-btn').forEach(el => el.remove());
+    const text = clone.innerText.trim();
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '✓ Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    }).catch(() => {
+      btn.textContent = 'Error';
+      setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
+    });
+  });
+  block.appendChild(btn);
+});
+
+// ── SEARCH ──────────────────────────────────────────────────────────────────
+const searchInput = document.getElementById('sideSearch');
+const searchEmpty = document.getElementById('searchEmpty');
+const searchTermEl = document.getElementById('searchTerm');
+
+// Build search index: { keyword[], sectionId, navItemIndex }
+const navItems = document.querySelectorAll('.nav-item');
+const navSubs  = document.querySelectorAll('.nav-sub');
+
+// Store original text for highlight restoration
+navItems.forEach(el => el.dataset.orig = el.innerHTML);
+navSubs.forEach(el  => el.dataset.orig = el.innerHTML);
+
+searchInput.addEventListener('input', function() {
+  const q = this.value.trim().toLowerCase();
+
+  // Restore originals first
+  navItems.forEach(el => el.innerHTML = el.dataset.orig);
+  navSubs.forEach(el  => el.innerHTML = el.dataset.orig);
+  navItems.forEach(el => el.classList.remove('hidden'));
+  navSubs.forEach(el  => el.classList.remove('hidden'));
+  searchEmpty.style.display = 'none';
+
+  if (!q) return;
+
+  searchTermEl.textContent = q;
+  let found = 0;
+
+  navItems.forEach((item, i) => {
+    const text = item.textContent.toLowerCase();
+    // Also check nearby subs
+    let subMatch = false;
+    navSubs.forEach(sub => {
+      if (sub.textContent.toLowerCase().includes(q)) subMatch = true;
+    });
+    if (text.includes(q) || subMatch) {
+      found++;
+      // Highlight in item text
+      item.innerHTML = highlight(item.dataset.orig, q);
+    } else {
+      item.classList.add('hidden');
+    }
+  });
+
+  navSubs.forEach(sub => {
+    const text = sub.textContent.toLowerCase();
+    if (!text.includes(q)) {
+      sub.classList.add('hidden');
+    } else {
+      sub.innerHTML = highlight(sub.dataset.orig, q);
+    }
+  });
+
+  if (found === 0) {
+    searchEmpty.style.display = 'block';
+    searchTermEl.textContent = q;
+  }
+});
+
+function highlight(html, q) {
+  // Simple text highlight (avoid breaking HTML tags)
+  const temp = document.createElement('div');
+  temp.innerHTML = html;
+  highlightText(temp, q);
+  return temp.innerHTML;
+}
+
+function highlightText(node, q) {
+  if (node.nodeType === 3) { // Text node
+    const idx = node.textContent.toLowerCase().indexOf(q);
+    if (idx >= 0) {
+      const before = node.textContent.slice(0, idx);
+      const match  = node.textContent.slice(idx, idx + q.length);
+      const after  = node.textContent.slice(idx + q.length);
+      const mark   = document.createElement('mark');
+      mark.textContent = match;
+      const parent = node.parentNode;
+      parent.insertBefore(document.createTextNode(before), node);
+      parent.insertBefore(mark, node);
+      parent.insertBefore(document.createTextNode(after), node);
+      parent.removeChild(node);
+    }
+  } else if (node.nodeType === 1 && node.tagName !== 'MARK') {
+    Array.from(node.childNodes).forEach(child => highlightText(child, q));
+  }
+}
+
+// Clear search on Escape
+searchInput.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    searchInput.value = '';
+    searchInput.dispatchEvent(new Event('input'));
+  }
+});
+
+// ── PRINT QUICK REF ─────────────────────────────────────────────────────────
+function printQuickRef() {
+  // Mark s8 as print target
+  document.querySelectorAll('.content-section').forEach(s => s.classList.remove('print-target'));
+  document.getElementById('s8').classList.add('print-target');
+  window.print();
+}
+</script>
+</body>
+</html>
+
